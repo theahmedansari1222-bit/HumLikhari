@@ -1,0 +1,17 @@
+{
+  "name": "hum-likhari-platform",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "description": "Hum Likhari platform: frontend, Supabase backend, admin console, tests",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "npm run validate && node --experimental-strip-types --no-warnings --test tests/*.test.mjs",
+    "test:e2e": "node tests/e2e/frontend.e2e.mjs && node tests/e2e/admin.e2e.mjs && node tests/e2e/design.e2e.mjs",
+    "test:db": "cd hum-likhari-backend && supabase test db",
+    "serve": "python3 -m http.server 8080",
+    "build:admin-preview": "node scripts/build-admin-preview.mjs"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}

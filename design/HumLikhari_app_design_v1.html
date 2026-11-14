@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<!--
+  ہم لکھاری — ایپ ڈیزائن v1.0 (اصل پری ویو + کوڈ کی اضافی خصوصیات)
+  اصل ڈیزائن کی ہر اسکرین اور رویہ جوں کا توں ہے۔ وہ چیزیں جو کوڈ (hum-likhari-frontend v1.0.0-rc.1) میں پہلے سے موجود تھیں اور
+  ڈیزائن میں نہیں تھیں، یہاں شامل کر دی گئی ہیں:
+    • سائن اِن کے بغیر پڑھنا اور "سائن اِن ضروری ہے" شیٹ؛ OTP دوبارہ بھیجنے کا کاؤنٹ ڈاؤن؛ "آپ نے ہمارے بارے میں کیسے سنا؟" سروے
+    • کور تصویر (اصل اپ لوڈ، تھمب نیل، ہٹانا)؛ تحریر پر تعاون کی سہولت کا احترام؛ اپنی تحریر پر "تعاون کریں" نہیں
+    • رپورٹ شیٹ (وجوہات + تفصیل)، بلاک شیٹ، بلاک کیے گئے لوگ، لکھاری کے صفحے پر مزید مینو، تبصروں میں جوابات
+    • اکاؤنٹ ڈیلیٹ پر DELETE لکھ کر تصدیق
+    • پروفائل: ملک، چھوٹے حروف والا ہینڈل (3–24)، بینک کی تینوں تفصیلات لازمی، "قارئین کو یہ تفصیل دکھائیں" سوئچ، لکھاری بیج
+    • تعاون: اپنی مرضی کی رقم (10 سے 10,00,000)، درست الفاظ "بھیجنے کا طریقہ دیکھیں" (ایپ رقم منتقل نہیں کرتی)، اگر لکھاری نے تفصیل نہ دی ہو تو خالی حالت، پیغام، تاریخ میں حالتیں + "رقم موصول ہوئی ✓" / "منسوخ کریں"
+    • مدد: پیغام کی قسم، فائل لگانا، "میرے پیغامات" اور ٹکٹ کی گفتگو
+    • ہماری ٹیم میں شامل ہوں، لکھاری بیج کی درخواست، پلیٹ فارم کی معاونت (صرف پاکستان، دستی ریکارڈ)
+    • اطلاعات کی نئی اقسام (مواد ہٹایا گیا، ٹکٹ کا جواب، ٹیم/بیج/معاونت کی حالت)؛ معطل اکاؤنٹ کی اسکرین؛ لوڈنگ/خرابی/خالی حالتیں
+  اسکرین کے نیچے "کوڈ میں شامل اضافی اسکرینیں" کی پٹی سے ان تک براہِ راست پہنچا جا سکتا ہے۔
+-->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ہم لکھاری – ایپ ڈیزائن v1.0</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@500&display=swap">
+<style>
+:root{--bg:#e9e9eb;--s:#fff;--s2:#f4f4f5;--ink:#0a0a0a;--mu:#68686e;--ln:#dedee2;--g:#0a0a0a;--gs:#f0f0f1;--on:#fff;--au:#0a0a0a;--aus:#f4f4f5;--hr:#d93025;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161616;--s:#000;--s2:#121212;--ink:#f4f4f5;--mu:#9b9ba1;--ln:#262628;--g:#fff;--gs:#1c1c1e;--on:#000;--au:#fff;--aus:#161618;--hr:#ff6b5e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161616;--s:#000;--s2:#121212;--ink:#f4f4f5;--mu:#9b9ba1;--ln:#262628;--g:#fff;--gs:#1c1c1e;--on:#000;--au:#fff;--aus:#161618;--hr:#ff6b5e;color-scheme:dark}
+:root[data-theme="cream"]{--bg:#e6dcc3;--s:#f7f0e0;--s2:#efe5cd;--ink:#2b2418;--mu:#6f634d;--ln:#e2d6ba;--g:#5a4630;--gs:#eadfc5;--on:#fff;--au:#5a4630;--aus:#eadfc5;--hr:#d93025;color-scheme:light}
+:root[data-theme="green"]{--bg:#d9e6dc;--s:#f1f7f2;--s2:#e3eee5;--ink:#12261a;--mu:#56705e;--ln:#d3e1d6;--g:#1f6b3a;--gs:#dcebdf;--on:#fff;--au:#1f6b3a;--aus:#dcebdf;--hr:#d93025;color-scheme:light}
+:root[data-theme="yellow"]{--bg:#efe3a8;--s:#fdf7d8;--s2:#f7edb5;--ink:#2a2406;--mu:#6e6428;--ln:#ebdf9c;--g:#8a6500;--gs:#f5e9a8;--on:#fff;--au:#8a6500;--aus:#f5e9a8;--hr:#d93025;color-scheme:light}
+:root[data-theme="blue"]{--bg:#d3e1f5;--s:#f0f6fe;--s2:#e1ecfa;--ink:#0f1e36;--mu:#566b88;--ln:#d1def2;--g:#1a56c4;--gs:#dbe7fa;--on:#fff;--au:#1a56c4;--aus:#dbe7fa;--hr:#d93025;color-scheme:light}
+:root[data-theme="pink"]{--bg:#f1d5df;--s:#fff1f5;--s2:#fbe1ea;--ink:#35101f;--mu:#845466;--ln:#f4d3df;--g:#c2185b;--gs:#fadce7;--on:#fff;--au:#c2185b;--aus:#fadce7;--hr:#d93025;color-scheme:light}
+:root[data-theme="orange"]{--bg:#f3dcc4;--s:#fff4e8;--s2:#fde5cf;--ink:#341a07;--mu:#85603f;--ln:#f4dcc3;--g:#c2500a;--gs:#fbdfc6;--on:#fff;--au:#c2500a;--aus:#fbdfc6;--hr:#d93025;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.8 "Noto Naskh Arabic",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--au);outline-offset:2px}
+.stage{height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px}
+.phone{position:relative;flex:1;min-height:0;width:min(100%,390px);max-height:820px;background:var(--s);border-radius:34px;overflow:hidden;box-shadow:0 0 0 7px #1a1a1a,0 20px 50px rgba(0,0,0,.25)}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden}
+.tb .screen{bottom:62px}
+.tabbar{display:none;position:absolute;inset:auto 0 0 0;height:62px;background:var(--s);border-top:1px solid var(--ln);align-items:center;justify-content:space-around}
+.tb .tabbar{display:flex}
+.tabbar button{display:flex;flex-direction:column;align-items:center;font-size:11px;line-height:1.3;color:var(--mu);gap:1px}
+.tabbar button.on{color:var(--g);font-weight:700}
+.tabbar svg{display:block}
+.tabbar button{position:relative}.tabbar .bd{position:absolute;top:-3px;left:50%;margin-left:6px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--hr);color:#fff;font-size:10px;line-height:16px;text-align:center}
+.tabbar .plus{width:44px;height:44px;border-radius:50%;background:var(--g);color:var(--on);display:grid;place-items:center}
+.toast{position:absolute;bottom:76px;left:50%;transform:translate(-50%,16px);background:var(--ink);color:var(--s);padding:4px 16px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap;z-index:30}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+#sheet{display:none;position:absolute;inset:0;z-index:20}
+#sheet.on{display:flex;flex-direction:column;justify-content:flex-end}
+.sb{position:absolute;inset:0;background:#0007}
+.sh{position:relative;background:var(--s);border-radius:22px 22px 0 0;padding:18px 18px 22px;max-height:88%;overflow-y:auto}
+.pad{padding:12px 16px}.mu{color:var(--mu)}.hl{font-family:"Noto Nastaliq Urdu","Noto Naskh Arabic",serif;font-weight:500;line-height:2.1;margin:0}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--ln);position:sticky;top:0;background:var(--s);z-index:3}
+.hdr h2{margin:0;font-size:17px}.rt{display:flex;min-width:34px;align-items:center;gap:2px}
+.ic{width:34px;height:34px;display:grid;place-items:center;border-radius:50%}
+.logo{font:700 21px/1.5 "Noto Naskh Arabic",system-ui,sans-serif;color:var(--ink)}
+.btn{display:block;width:100%;padding:7px;border-radius:14px;background:var(--g);color:var(--on);font-weight:700;font-size:16px;text-align:center}
+.btn.o{background:none;color:var(--g);border:1.5px solid var(--g)}.btn.au{background:var(--au);color:var(--on)}.btn.rd{background:var(--hr)}
+.lnk{color:var(--g);font-weight:600;padding:4px 8px}
+.pill{background:var(--g);color:var(--on);padding:0 16px;border-radius:99px;font-weight:700;font-size:14px}
+.search{display:flex;align-items:center;gap:8px;background:var(--s2);border-radius:14px;padding:4px 12px;color:var(--mu)}
+.search input{flex:1;background:none;border:0;outline:0;min-width:0}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px}
+.cats button{white-space:nowrap;padding:0 14px;border-radius:99px;background:var(--s2);color:var(--mu);font-size:14px}
+.cats button.on{background:var(--g);color:var(--on);font-weight:700}
+.card{margin:0 12px 12px;padding:12px;border:1px solid var(--ln);border-radius:16px}
+.who{display:flex;align-items:center;gap:10px}.who b{display:block;line-height:1.4}.who small{color:var(--mu);font-size:12px}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:17px;flex:none}
+.card h3{font-size:17px;margin:4px 0 0;cursor:pointer}.card p{margin:0 0 8px;color:var(--mu);font-size:14px}
+.art{position:relative;border-radius:12px;overflow:hidden}.art svg{position:absolute;inset:0;width:100%;height:100%;opacity:.2}
+.poem{margin:6px 0;padding:10px;background:var(--s2);border-radius:12px;text-align:center;font-family:"Noto Nastaliq Urdu",serif;line-height:2.2;cursor:pointer}
+.acts{display:flex;align-items:center;gap:18px;margin-top:8px;font-size:13px;color:var(--mu)}
+.acts button{display:inline-flex;align-items:center;gap:5px;color:var(--mu)}.acts button.on{color:var(--hr)}.acts .sv.on{color:var(--g)}.acts .end{margin-inline-start:auto}
+.fld{width:100%;border:1px solid var(--ln);border-radius:12px;background:var(--s);padding:6px 12px;outline:0}.fld.bad{border-color:var(--hr)}
+.tools{display:flex;direction:ltr;justify-content:space-around;margin:10px 0;padding:6px;border:1px solid var(--ln);border-radius:12px;font:700 15px system-ui}
+.tools span{display:inline-flex}
+.row{display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid var(--ln);border-radius:12px;margin-bottom:8px;width:100%}
+.row select{margin-inline-start:auto;background:var(--s);border:0}.row svg{color:var(--mu);flex:none}
+.sw{margin-inline-start:auto;width:44px;height:25px;border-radius:99px;background:var(--ln);position:relative;transition:.2s;direction:ltr;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--g)}.sw.on::after{left:22px;background:var(--on)}
+.stats{display:flex;justify-content:space-around;text-align:center;margin:10px 0}.stats b{display:block;font-size:20px;line-height:1.3}.stats span{color:var(--mu);font-size:13px}
+.tabs{display:flex;border-bottom:1px solid var(--ln)}.tabs button{flex:1;padding:4px;color:var(--mu)}.tabs button.on{color:var(--g);font-weight:700;box-shadow:inset 0 -3px 0 var(--g)}
+.li{display:flex;gap:12px;padding:10px 16px;align-items:center;cursor:pointer}.li .art{width:72px;height:58px;flex:none}.li b{display:block;line-height:1.6}.li small{color:var(--mu)}
+.empty{text-align:center;color:var(--mu);padding:28px 20px}
+.mrow{display:flex;align-items:center;gap:14px;padding:10px 18px;width:100%;border-bottom:1px solid var(--ln)}.mrow svg{color:var(--g)}.mrow.rd,.mrow.rd svg{color:var(--hr)}
+.splash{min-height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;background:var(--s)}
+.nq{font-family:"Noto Nastaliq Urdu",serif;line-height:2.2;font-size:22px;margin:10px 0 2px}
+.fol{margin-inline-start:auto;padding:0 16px;border-radius:99px;border:1.5px solid var(--g);color:var(--g);font-weight:700;font-size:14px}.fol.on{background:var(--gs);border-color:transparent}
+.rp{display:flex;gap:8px;align-items:center;padding:8px 16px;background:var(--s2);font-size:14px;flex-wrap:wrap}.rp button{padding:0 12px;border-radius:99px;border:1px solid var(--ln);background:var(--s)}
+.body p{margin:0 0 12px}.cpl{text-align:center;font-family:"Noto Nastaliq Urdu",serif;line-height:2.4;margin:0 0 14px}
+.sup{margin-top:18px;padding:14px;border-radius:16px;background:var(--aus);text-align:center}.sup p{margin:0 0 8px}
+.bar{position:sticky;bottom:0;background:var(--s);border-top:1px solid var(--ln);padding:6px 16px}.bar .acts{margin:0;justify-content:space-between}
+.cm{padding:10px 16px;border-bottom:1px solid var(--ln)}.cm b{display:block}
+.cin{position:sticky;bottom:0;display:flex;gap:8px;padding:8px 12px;background:var(--s);border-top:1px solid var(--ln)}.cin input{flex:1}
+.amts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.amts button{padding:0 14px;border-radius:99px;border:1.5px solid var(--ln)}.amts button.on{border-color:var(--au);background:var(--aus);font-weight:700}
+.qr{text-align:center;margin:8px 0}
+#off{display:none;position:absolute;left:0;right:0;bottom:62px;z-index:15;background:var(--ink);color:var(--s);padding:4px 16px;font-size:13px;align-items:center;justify-content:space-between}#off.on{display:flex}.phone:not(.tb) #off{bottom:0}
+.tools button{padding:0 18px}
+.lg{display:inline-flex;align-items:center;justify-content:center;min-width:56px;height:26px;padding:0 8px;border-radius:7px;color:#fff;font:800 11px system-ui,sans-serif;direction:ltr;flex:none}
+.pm{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1.5px solid var(--ln);border-radius:12px;margin-top:8px}.pm.on{border-color:var(--au);background:var(--aus)}.pm[disabled]{opacity:.5;cursor:default}
+.pd{padding:4px 12px 6px;border:1.5px solid var(--ln);border-top:0;border-radius:0 0 12px 12px;margin-top:-6px}.dv{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--ln)}.dv:last-child{border:0}.dv span{min-width:92px;font-size:13px}.dv b{flex:1;font-weight:600;word-break:break-all;unicode-bidi:plaintext;text-align:start}.qr svg{background:#fff;padding:8px;border-radius:12px;width:160px;height:160px}
+@media(max-width:480px){.stage{padding:0}.phone{width:100%;max-height:none;border-radius:0;box-shadow:none}}
+.brand{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding-top:56px}
+.wm{font:700 50px/1.5 "Noto Naskh Arabic",system-ui,sans-serif;color:var(--ink)}
+.wl{font:600 12px/1 system-ui,sans-serif;letter-spacing:.34em;padding-inline-start:.34em;color:var(--mu);direction:ltr}
+.go{width:100%;display:grid;gap:10px}
+.go .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}
+.go .btn.o{border-color:var(--ln);color:var(--ink)}
+.gi{width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.thm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:6px 18px 16px;border-bottom:1px solid var(--ln)}
+.thm button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;color:var(--mu)}
+.thm i{width:100%;aspect-ratio:1.25;border-radius:14px;border:1.5px solid var(--ln);display:grid;place-items:center}
+.thm i b{width:20px;height:20px;border-radius:50%}
+.thm button.on{color:var(--ink);font-weight:700}
+.thm button.on i{border-color:var(--g);box-shadow:0 0 0 2px var(--g)}
+.avw{position:relative;display:inline-block;border-radius:50%}
+.cam{position:absolute;bottom:0;inset-inline-end:0;width:34px;height:34px;border-radius:50%;background:var(--g);color:var(--on);border:3px solid var(--s);display:grid;place-items:center}
+.cw{position:relative;width:min(100%,320px);aspect-ratio:1;margin:4px auto 0;border-radius:16px;overflow:hidden;background:#000}
+.cw canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+.cmk{position:absolute;inset:0;pointer-events:none}
+.cmk::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 999px rgba(0,0,0,.55);border:2px solid #fff}
+.crow{display:flex;align-items:center;gap:10px;margin:12px 0}.crow input{flex:1;accent-color:var(--g)}
+
+/* ---- v1.0 additions (from the implemented code) ---- */
+.ltr{direction:ltr;text-align:left}
+.fld[disabled],.btn[disabled]{opacity:.5;cursor:default}
+select.fld{appearance:auto}
+.lbl{display:block;margin-top:10px}.hint{font-size:12px;margin-top:2px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--ln);border-top-color:var(--g);border-radius:50%;vertical-align:middle;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+.notice{margin:10px 0;padding:10px 12px;border-radius:12px;background:var(--s2);border:1px solid var(--ln);font-size:14px}
+.notice.bad{border-color:var(--hr);color:var(--hr)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:0 10px;border-radius:99px;background:var(--s2);color:var(--mu);font-size:12px;line-height:22px;white-space:nowrap}
+.chip.ok{background:var(--aus);color:var(--g)}.chip.bad{color:var(--hr)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}
+.cats.wrap{flex-wrap:wrap}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb{width:56px;height:40px;object-fit:cover;border-radius:8px}
+.bub{margin:8px 16px;padding:8px 12px;border-radius:14px;max-width:85%}
+.bub.me{background:var(--aus);margin-inline-start:auto}.bub.them{background:var(--s2);margin-inline-end:auto}
+.bub small{display:block;color:var(--mu);font-size:11px}
+.acc{margin:10px 0;padding:10px 12px;border:1.5px solid var(--ln);border-radius:12px}
+.li small.note{display:block;color:var(--mu)}
+.cm.rep{margin-inline-start:28px;border-inline-start:2px solid var(--ln)}
+.row{display:flex;align-items:center;gap:10px;width:100%;text-align:start}
+.dev{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:820px;font-size:12px;line-height:1.5}
+.dev b{color:var(--mu);font-weight:600}.dev button{padding:2px 10px;border:1px solid var(--ln);border-radius:99px;background:var(--s)}.dev button:hover{border-color:var(--g)}
+@media(max-width:480px){.dev{display:none}}
+</style>
+</head>
+<body>
+<div class="stage">
+  
+  <div class="phone" id="phone">
+    <div class="screen" id="screen"></div>
+    <nav class="tabbar" id="tabbar"></nav>
+    <div id="off" role="alert"><span>انٹرنیٹ نہیں ہے</span><button class="lnk" style="color:#ffd23f;padding:0" data-retry>دوبارہ کوشش</button></div>
+    <div id="sheet"></div>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+  <nav class="dev" id="dev" aria-label="کوڈ میں شامل اضافی اسکرینیں"></nav>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const P={bell:"M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0",search:"M21 21l-4.3-4.3M11 18a7 7 0 110-14 7 7 0 010 14z",back:"M9 5l7 7-7 7",chev:"M15 5l-7 7 7 7",heart:"M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z",comment:"M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z",share:"M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v13",image:"M3 5h18v14H3zM3 16l5-5 5 5 3-3 5 5M8.5 9h.01",link:"M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7",quote:"M9 7H5v6h4V7zM9 13c0 3-1 4-3 5M19 7h-4v6h4V7zM19 13c0 3-1 4-3 5",user:"M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z",sliders:"M4 6h10M18 6h2M4 12h2M10 12h10M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4",mail:"M4 5h16v14H4zM4 7l8 6 8-6",out:"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9",bookmark:"M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z",home:"M3 11l9-8 9 8M5 9.5V20h5v-6h4v6h5V9.5",plus:"M12 5v14M5 12h14",type:"M4 7V5h16v2M12 5v14M9 19h6",more:"M5 12h.01M12 12h.01M19 12h.01",flag:"M4 21V4M4 4h12l-2 4 2 4H4",block:"M12 21a9 9 0 100-18 9 9 0 000 18zM5.6 5.6l12.8 12.8",trash:"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3",send:"M22 2L11 13M22 2l-7 20-4-9-9-4z",edit:"M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z",bank:"M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18",down:"M6 9l6 6 6-6",doc:"M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5M9 13h6M9 17h6",lock:"M6 11h12v9H6zM8 11V8a4 4 0 018 0v3",camera:"M4 8h3l2-3h6l2 3h3v11H4zM12 17a4 4 0 100-8 4 4 0 000 8z",rotate:"M20 12a8 8 0 11-2.3-5.7M20 4v5h-5",phone:"M8 2.5h8a1.5 1.5 0 011.5 1.5v16a1.5 1.5 0 01-1.5 1.5H8A1.5 1.5 0 016.5 20V4A1.5 1.5 0 018 2.5zM11 18.5h2",users:"M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8",award:"M12 15a6 6 0 100-12 6 6 0 000 12zM8.5 14l-1.5 7 5-3 5 3-1.5-7",gift:"M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H8a2.5 2.5 0 010-5c2 0 4 2.5 4 5zM12 7h4a2.5 2.5 0 000-5c-2 0-4 2.5-4 5z"};
+const ic=(n,s=20,f)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${f?"currentColor":"none"}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+const G={g1:"linear-gradient(135deg,#14532d,#4f9a6b)",g2:"linear-gradient(135deg,#e29a4b,#b5546b)",g3:"linear-gradient(135deg,#143d6b,#3aa1cf)",g4:"linear-gradient(135deg,#1f2a44,#6b5b95)",g5:"linear-gradient(135deg,#a67c52,#5e4128)",g6:"linear-gradient(135deg,#c9b08a,#7d6445)",g7:"linear-gradient(#8fc1dd,#3f7f58)"};
+const BODY="ہم ایک ایسے دور میں ہیں جہاں نوجوانوں کے پاس بے پناہ صلاحیتیں ہیں۔ اگر انہیں صحیح رہنمائی اور مواقع ملیں تو وہ پاکستان کو ترقی کی نئی بلندیوں تک لے جا سکتے ہیں۔\nتعلیم، ہنر اور اعتماد وہ تین ستون ہیں جن پر کوئی بھی قوم اپنا مستقبل کھڑا کرتی ہے۔";
+const A={
+a1:{t:"پاکستان کا مستقبل اور نوجوان",by:"عمران احمد",tm:"2 گھنٹے پہلے",g:"مضمون",tp:"سماج",l:4500,k:"g1",x:"ہم ایک ایسے دور میں ہیں جہاں نوجوانوں کے…",b:BODY},
+a2:{t:"زندگی کی خوبصورتی",by:"سارہ خان",tm:"3 گھنٹے پہلے",g:"کالم",tp:"زندگی",l:2800,k:"g2",x:"زندگی چھوٹی ہے، اسے خوشیوں میں گزاریں…",b:"زندگی چھوٹی ہے، اسے خوشیوں میں گزاریں۔\nچھوٹی چھوٹی باتوں میں خوشی تلاش کرنا ایک ہنر ہے جو وقت کے ساتھ آتا ہے۔"},
+a4:{t:"شام کے دیے",by:"عمران احمد",tm:"1 دن پہلے",g:"شاعری",tp:"محبت",l:1900,k:"g4",x:"",b:"شام ڈھلتے ہی دیے دل میں جلا لیتا ہوں\nمیں اندھیروں سے بھی رشتہ سا نبھا لیتا ہوں\nلفظ میرے ہیں مگر درد زمانے کا ہے\nہر غزل میں کوئی چہرہ سا چھپا لیتا ہوں"},
+a3:{t:"علم اور ٹیکنالوجی کا کردار",by:"عمران احمد",tm:"2 دن پہلے",g:"مضمون",tp:"ٹیکنالوجی",l:3100,k:"g3",x:"علم اور ٹیکنالوجی نے ہماری زندگی بدل دی ہے…",b:"علم اور ٹیکنالوجی نے ہماری زندگی بدل دی ہے۔\nسوال یہ ہے کہ ہم اسے سیکھنے کے لیے استعمال کرتے ہیں یا صرف وقت گزارنے کے لیے۔"},
+a5:{t:"جدید دور میں کتابوں کی اہمیت",by:"عائشہ ملک",tm:"1 گھنٹہ پہلے",g:"مضمون",tp:"ادب",l:900,k:"g5",x:"کتاب آج بھی سوچنے کا سب سے پرسکون ذریعہ ہے…",b:"کتاب آج بھی سوچنے کا سب سے پرسکون ذریعہ ہے۔"},
+a6:{t:"خوش رہنے کے آسان طریقے",by:"محمد علی",tm:"2 گھنٹے پہلے",g:"کالم",tp:"زندگی",l:700,k:"g6",x:"خوشی بڑے فیصلوں سے کم اور روزمرہ عادتوں سے زیادہ آتی ہے…",b:"خوشی بڑے فیصلوں سے کم اور روزمرہ عادتوں سے زیادہ آتی ہے۔"},
+a7:{t:"شمالی پہاڑوں کا سفر",by:"زینب فاطمہ",tm:"3 گھنٹے پہلے",g:"سفرنامہ",tp:"سفر",l:1200,k:"g7",x:"پہاڑوں کی صبح کا اپنا ہی ایک سکوت ہوتا ہے…",b:"پہاڑوں کی صبح کا اپنا ہی ایک سکوت ہوتا ہے۔"}};
+const CM={a1:[["سارہ خان","بہت عمدہ تحریر، نوجوانوں کو واقعی رہنمائی کی ضرورت ہے۔"],["عمران احمد","شکریہ سارہ، آپ کی رائے کا بہت شکریہ۔",1],["محمد علی","دوسرا پیراگراف خاص طور پر پسند آیا۔"]],a2:[["عائشہ ملک","بالکل درست کہا۔"]]};
+const GEN=["سب","شاعری","افسانہ","کالم","مضمون","سفرنامہ"],TOP=["ادب","محبت","سماج","زندگی","سفر","ٹیکنالوجی"];
+const H0=()=>({t:"",b:"",g:"مضمون",tp:"ادب",d:true,bad:0,cov:""});
+const S={ob:{ph:"",otp:""},int:{},dh:[],ht:0,fq:-1,hm:"",lg:"t",dp:0,dm:"",rp:"",nt:[{x:"سارہ خان نے آپ کی تحریر پسند کی",tm:"5 منٹ پہلے",a:"سارہ خان",ty:"art",id:"a1",r:0},{x:"محمد علی نے تبصرہ کیا",tm:"1 گھنٹہ پہلے",a:"محمد علی",ty:"cm",id:"a1",r:0},{x:"عائشہ ملک نے آپ کو فالو کیا",tm:"2 گھنٹے پہلے",a:"عائشہ ملک",ty:"au",id:"عائشہ ملک",r:0},{x:"آپ کی تحریر کو تعاون موصول ہوا",tm:"3 گھنٹے پہلے",a:"",ty:"art",id:"a4",r:1}],dr:[],me:{n:"عمران احمد",h:"imranahmad",bio:"",c:"PK",po:1},ed:{},rm:{},au:"",pp:"me",pt:0,scr:"splash",H:[],feed:0,gen:"سب",tab:0,lk:{},sv:{},fl:{"سارہ خان":1},art:"a1",fs:1,nk:0,rc:0,sheet:"",amt:500,qr:0,th:"auto",q:"",tp:"",home:["a1","a2","a4","a3","a5","a6","a7"],own:["a1","a4","a3"],w:H0()};
+/* ===== v1.0: state, constants and helpers taken from the implemented code ===== */
+Object.assign(S,{user:0,fx:{},sv2:{src:""},bl:{"بلال احمد":1},cust:"",dn:"",dmsg:"",dc:"",derr:"",hf:"",hty:"question",sig:"",bt:"",rep:null,otpLeft:0,
+ bact:["consistent_writer"],bapp:[],
+ tm:[{area:"proofreading",st:"declined",tm:"2 ہفتے پہلے",note:"ابھی ضرورت نہیں، شکریہ۔"}],
+ pf:[{amt:1000,m:"easypaisa",st:"confirmed",tm:"1 ہفتہ پہلے",note:"شکریہ!"}],
+ tk:[{id:"t1",n:"HL-0001",type:"bug",msg:"تصویر اپ لوڈ کرتے وقت ایپ رک جاتی ہے۔",st:"in_review",tm:"4 گھنٹے پہلے",th:[["them","ہم اس مسئلے کو دیکھ رہے ہیں، کچھ تفصیل بتا سکتے ہیں کہ کون سا فون ہے؟","3 گھنٹے پہلے"]]},
+     {id:"t2",n:"HL-0002",type:"question",msg:"ہینڈل کیسے بدلوں؟",st:"resolved",tm:"3 دن پہلے",th:[["them","پروفائل ایڈٹ میں ہینڈل بدل سکتے ہیں۔","3 دن پہلے"]]}]});
+S.nt.push({x:"آپ کی ایک تحریر کمیونٹی اصولوں کی خلاف ورزی کی وجہ سے ہٹا دی گئی",tm:"6 گھنٹے پہلے",a:"",ty:"rm",id:"",r:0},
+ {x:"آپ کے پیغام #HL-0001 پر نیا جواب آیا ہے",tm:"3 گھنٹے پہلے",a:"",ty:"tk",id:"t1",r:0},
+ {x:"آپ کی ٹیم میں شمولیت کی درخواست کی حالت تبدیل ہوئی",tm:"2 ہفتے پہلے",a:"",ty:"tm",id:"",r:1},
+ {x:"آپ کی معاونت کی اطلاع کی تصدیق ہو گئی",tm:"1 ہفتہ پہلے",a:"",ty:"pf",id:"",r:1});
+const COUNTRIES=[["","بتانا نہیں چاہتے"],["PK","پاکستان"],["IN","بھارت"],["AE","متحدہ عرب امارات"],["SA","سعودی عرب"],["GB","برطانیہ"],["US","امریکہ"],["CA","کینیڈا"]];
+const SURVEY=[["facebook","فیس بک"],["instagram","انسٹاگرام"],["youtube","یوٹیوب"],["whatsapp","واٹس ایپ"],["tiktok","ٹک ٹاک"],["google_search","گوگل سرچ"],["friend_family","دوست یا رشتہ دار"],["literary_community","ادبی حلقہ یا کمیونٹی"],["website_blog","ویب سائٹ یا بلاگ"],["advertisement","اشتہار"],["other","کوئی اور"]];
+const REASONS=[["spam","اسپام یا اشتہار"],["harassment","ہراسانی یا دھمکی"],["hate","نفرت انگیز مواد"],["plagiarism","دوسرے کی تحریر چوری"],["inappropriate","نامناسب مواد"],["other","کوئی اور وجہ"]];
+const FBT=[["question","سوال"],["suggestion","تجویز"],["bug","خرابی کی اطلاع"],["complaint","شکایت"]];
+const TEAMA=[["proofreading","پروف ریڈنگ"],["editing","ایڈیٹنگ"],["translation","ترجمہ"],["design","ڈیزائن"],["development","ڈیولپمنٹ"],["community","کمیونٹی مینجمنٹ"],["promotion","پروموشن"],["research","تحقیق"],["other","کوئی اور"]];
+const BADGET=[["consistent_writer","مستقل مزاج لکھاری"],["featured_writer","نمایاں لکھاری"]];
+const BADGEH={consistent_writer:"باقاعدگی سے معیاری تحریریں شائع کرنے والوں کے لیے۔",featured_writer:"اعلیٰ معیار کے کام پر ٹیم کی طرف سے نمایاں کیے گئے لکھاریوں کے لیے۔"};
+const METH={jazzcash:"جاز کیش",easypaisa:"ایزی پیسہ",bank_transfer:"بینک اکاؤنٹ"};
+const STX={ticket:{received:"موصول",in_review:"زیرِ جائزہ",resolved:"حل ہو گیا",closed:"بند"},team:{received:"موصول",in_review:"زیرِ جائزہ",accepted:"منظور",declined:"مسترد",withdrawn:"واپس لی گئی"},badge:{received:"موصول",in_review:"زیرِ جائزہ",approved:"منظور",declined:"مسترد",withdrawn:"واپس لی گئی"},pf:{submitted:"جمع ہو گئی",under_review:"زیرِ جائزہ",confirmed:"تصدیق ہو گئی",rejected:"مسترد"}};
+const CLS={s:["بھیجنے والے نے اطلاع دی",""],a:["لکھاری نے وصولی کی تصدیق کی","ok"],c:["منسوخ","bad"]};
+const BA={"سارہ خان":["featured_writer"]};
+const PFA=[{m:"jazzcash",label:"ہم لکھاری",title:"ہم لکھاری",id:"0300 0000000",ins:"رقم بھیجنے کے بعد اطلاع ضرور درج کریں۔"},{m:"bank_transfer",label:"",bank:"نمونہ بینک",title:"ہم لکھاری ٹرسٹ",id:"PK00 DEMO 0000 0000 0000 0002"}];
+const tone=x=>/accepted|approved|confirmed|resolved|acknowledged/.test(x)?"ok":/declined|rejected|cancelled|withdrawn/.test(x)?"bad":"";
+const lab=(l,k)=>(l.find(o=>o[0]==k)||[k,k])[1];
+const chip=(t,k)=>`<span class="chip ${k||""}">${t}</span>`;
+const bchip=t=>`<span class="chip ok">${ic("award",12)} ${lab(BADGET,t)}</span>`;
+const opts=(l,c)=>l.map(o=>`<option value="${o[0]}" ${o[0]==c?"selected":""}>${o[1]}</option>`).join("");
+const fxv=(k,d)=>S.fx[k]!==undefined?S.fx[k]:d;
+const da=()=>Math.floor(+(S.cust||S.amt))||0;
+const donLbl=()=>da()>=10?da()+" روپے بھیجنے کا طریقہ دیکھیں":"بھیجنے کا طریقہ دیکھیں";
+const lgm=m=>lg(m=="jazzcash"?"jc":m=="easypaisa"?"ep":"bk");
+const hdt=t=>`<div class="hdr"><span class="rt"></span><h2>${t}</h2><span class="rt"></span></div>`;
+const needAuth=msg=>{if(S.user)return true;S.sheet="signin";S.sig=msg;render();return false};
+const TB=["home","explore","profile","notif"];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nu=()=>S.nt.filter(n=>!n.r).length;
+const un=s=>s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&amp;/g,"&");
+const fm=n=>n>=1000?(n/1000).toFixed(1).replace(".0","")+"K":n;
+const av=(n,z)=>{const p=n==S.me.n&&S.me.pic;return `<span class="av" style="background:${p?`url(${p}) center/cover`:`hsl(${n.charCodeAt(0)*7%360} 38% 36%)`}${z?`;width:${z}px;height:${z}px;font-size:${z*.4}px;margin:0 auto 4px`:""}">${p?"":n[0]}</span>`};
+const art0=(a,h)=>`<div class="art" style="height:${h}px;background:${G[a.k]}"><svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><circle cx="82" cy="10" r="34" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="82" cy="10" r="20" fill="none" stroke="#fff" stroke-width="1.5"/></svg></div>`;
+const art=(a,h)=>a.cv?`<div class="art" style="height:${h}px"><img src="${a.cv}" alt=""></div>`:art0(a,h);
+const nc=id=>(CM[id]||[]).length;
+const U={"سارہ خان":["sarakhan",8400,120,"کہانیاں اور روزمرہ زندگی پر لکھتی ہوں۔"],"محمد علی":["muhammadali",3200,85,"کالم نگار۔"],"عائشہ ملک":["ayeshamalik",5100,210,"کتابوں اور ادب کی قاری۔"],"زینب فاطمہ":["zainabfatima",2700,64,"سفرنامے لکھتی ہوں۔"],"فرحان رضا":["farhanraza",900,40,""],"حنا شاہد":["hinashahid",640,95,""],"بلال احمد":["bilalahmad",410,30,""],"مریم جاوید":["maryamjaved",1200,77,"شاعری۔"]},PEOPLE=Object.keys(U);
+const lg=k=>k=="jc"?`<span class="lg" style="background:#d6232b">Jazz<span style="color:#ffd23f">Cash</span></span>`:k=="ep"?`<span class="lg" style="background:#2e9e45">easypaisa</span>`:`<span class="lg" style="background:var(--ink);color:var(--s)">${ic("bank",18)}</span>`;
+const qrImg=z=>"data:image/svg+xml,"+encodeURIComponent(qr(z).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '));
+const payOf=n=>n==S.me.n?S.me:n=="محمد علی"?{eq:qrImg(11)}:n=="عائشہ ملک"?{}:{jq:qrImg(7),eq:qrImg(11),bn:"نمونہ بینک",bt:n,ba:"PK00 DEMO 0000 0000 0000 0001"};
+const qrF=(m,k,nm)=>`<label class="mu" style="display:flex;align-items:center;gap:8px;margin-top:10px">${lg(k)}${nm} کا QR کوڈ</label><div class="row" style="margin-top:4px">${m[k+"q"]?`<img src="${m[k+"q"]}" alt="" style="width:56px;height:56px;object-fit:contain;background:#fff;border-radius:8px"><label class="lnk" style="cursor:pointer"><input type="file" accept="image/*" data-qr${k} hidden>تبدیل کریں</label><button class="lnk" data-qx="${k}" style="color:var(--hr);margin-inline-start:auto">ہٹائیں</button>`:`<label class="lnk" style="cursor:pointer"><input type="file" accept="image/*" data-qr${k} hidden>${nm} ایپ سے QR کی تصویر اپ لوڈ کریں</label>`}</div>`;
+const payF=m=>`<div class="mu" style="font-size:12px">جاز کیش اور ایزی پیسہ ایپ میں اپنا QR کوڈ کھول کر اس کا اسکرین شاٹ لیں اور یہاں اپ لوڈ کریں۔ اس طرح آپ کا نمبر ظاہر نہیں ہوتا۔</div>`+qrF(m,"jc","جاز کیش")+qrF(m,"ep","ایزی پیسہ")+[["bn","بینک کا نام",""],["bt","اکاؤنٹ ٹائٹل",""],["ba","اکاؤنٹ نمبر / IBAN","PK00 XXXX XXXX XXXX XXXX XXXX"]].map(f=>`<label class="mu" style="display:flex;align-items:center;gap:8px;margin-top:10px">${["jc","ep","bn"].includes(f[0])?lg(f[0]=="bn"?"bk":f[0]):""}${f[1]}</label><input class="fld" data-e="${f[0]}" value="${esc(m[f[0]]||"")}" placeholder="${f[2]}"${["jc","ep","ba"].includes(f[0])?' style="direction:ltr;text-align:left" inputmode="tel"':""}>`).join("");
+const payStep=()=>{const to=S.scr=="author"?S.au:A[S.art].by,p=payOf(to),ms=[["jc","جاز کیش",p.jq&&[["qr",p.jq]]],["ep","ایزی پیسہ",p.eq&&[["qr",p.eq]]],["bk","بینک اکاؤنٹ",p.bn&&p.ba&&[["بینک",p.bn],["اکاؤنٹ ٹائٹل",p.bt||to],["اکاؤنٹ نمبر / IBAN",p.ba]]]];
+return `<h3 class="hl" style="font-size:19px">ادائیگی کا طریقہ</h3><div class="mu">${da()} روپے ${to} کو بھیجنے کے لیے طریقہ منتخب کریں۔</div>${ms.map(m=>{const o=S.dm==m[0]&&m[2];return `<button class="pm ${o?"on":""}" data-pm="${m[0]}" ${m[2]?"":"disabled"}>${lg(m[0])}<b style="flex:1;text-align:start">${m[1]}</b>${m[2]?ic(o?"down":"chev",16):`<span class="mu" style="font-size:12px">دستیاب نہیں</span>`}</button>${o?`<div class="pd">${m[2].map(r=>r[0]=="qr"?`<div style="text-align:center;padding:8px 0"><img src="${r[1]}" alt="QR" style="width:200px;height:200px;object-fit:contain;background:#fff;border-radius:12px;padding:6px"><div class="mu" style="font-size:12px">${m[1]} ایپ سے QR اسکین کریں</div></div>`:`<div class="dv"><span class="mu">${r[0]}</span><b>${esc(r[1])}</b><button class="lnk" data-cpy="${esc(r[1])}">کاپی</button></div>`).join("")}</div>`:""}`}).join("")}<input class="fld" style="margin-top:10px" data-dn value="${esc(S.dn)}" maxlength="500" placeholder="لکھاری کے لیے پیغام (اختیاری)" aria-label="پیغام"><button class="btn au" style="margin-top:10px" data-paid>میں نے رقم بھیج دی</button><div class="mu" style="font-size:12px;margin-top:4px">یہ بٹن صرف آپ کی اطلاع درج کرتا ہے، رقم ایپ کے ذریعے منتقل نہیں ہوتی۔</div><button class="lnk" style="width:100%;margin-top:6px" data-dback>رقم تبدیل کریں</button>`};
+const fbtn=n=>`<button class="fol ${S.fl[n]?"on":""}" data-fl="${n}">${S.fl[n]?"فالو کر رہے ہیں":"فالو"}</button>`;
+const acts=id=>{const a=A[id],on=S.lk[id];return `<div class="acts"><button data-like="${id}" class="${on?"on":""}" aria-label="پسند">${ic("heart",18,on)} ${fm(a.l+(on?1:0))}</button><button data-cm="${id}" aria-label="تبصرے">${ic("comment",18)} ${nc(id)}</button><button class="sv end ${S.sv[id]?"on":""}" data-save="${id}" aria-label="محفوظ کریں">${ic("bookmark",18,S.sv[id])}</button><button data-sheet="share" data-sid="${id}" aria-label="شیئر">${ic("share",18)}</button></div>`};
+const card=id=>{const a=A[id];return `<article class="card"><div class="who" data-au="${a.by}" style="cursor:pointer">${av(a.by)}<div><b>${a.by}</b><small>${a.tm} · ${a.g}</small></div></div><h3 class="hl" data-open="${id}">${a.t}</h3>${a.g=="شاعری"?`<div class="poem" data-open="${id}">${a.b.split("\n").slice(0,2).join("<br>")}</div>`:`<p>${a.x}</p>${art(a,120)}`}${acts(id)}</article>`};
+const li=id=>{const a=A[id];return `<div class="li" data-open="${id}">${art(a,58)}<div><b>${a.t}</b><small>${a.by} · ${a.tm}</small></div></div>`};
+const hd=(t,r)=>`<div class="hdr"><button class="ic" data-back aria-label="واپس">${ic("back")}</button><h2>${t}</h2><span class="rt">${r||""}</span></div>`;
+function qr(z=7){let r="",s=z,n=25;for(let y=0;y<n;y++)for(let x=0;x<n;x++){if((x<7&&y<7)||(x>17&&y<7)||(x<7&&y>17))continue;s=(s*9301+49297)%233280;if(s/233280>.5)r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}
+const f=(x,y)=>`<path d="M${x} ${y}h7v7h-7z M${x+1} ${y+1}v5h5v-5z" fill-rule="evenodd"/><rect x="${x+2}" y="${y+2}" width="3" height="3"/>`;
+return `<svg viewBox="0 0 25 25" fill="#1d241f" aria-label="QR کوڈ">${r}${f(0,0)}${f(18,0)}${f(0,18)}</svg>`}
+const exRes=()=>Object.keys(A).filter(i=>!S.bl[A[i].by]&&(!S.tp||A[i].tp==S.tp)&&(!S.q||(A[i].t+A[i].by).includes(S.q))).map(li).join("")||'<div class="empty">کوئی نتیجہ نہیں ملا۔ کوئی اور لفظ آزمائیں۔</div>';
+const sel=(k,list)=>`<select data-w="${k}" aria-label="${k}">${list.map(c=>`<option ${c==S.w[k]?"selected":""}>${c}</option>`).join("")}</select>`;
+
+const TH=[["auto","خودکار","linear-gradient(135deg,#fff 50%,#0a0a0a 50%)"],["light","سفید","#fff","#0a0a0a"],["dark","کالا","#000","#fff"],["cream","کریمی","#f7f0e0","#5a4630"],["green","سبز","#f1f7f2","#1f6b3a"],["yellow","پیلا","#fdf7d8","#8a6500"],["blue","نیلا","#f0f6fe","#1a56c4"],["pink","گلابی","#fff1f5","#c2185b"],["orange","اورنج","#fff4e8","#c2500a"]];
+const R={
+home:()=>{const ids=S.home.filter(i=>!S.bl[A[i].by]&&(!S.feed||S.fl[A[i].by])&&(S.gen=="سب"||A[i].g==S.gen));
+return `<div class="hdr"><span class="rt"></span><span class="logo">ہم لکھاری</span><span class="rt"></span></div>
+<div class="tabs">${["آپ کے لیے","فالو"].map((t,i)=>`<button data-feed="${i}" class="${i==S.feed?"on":""}">${t}</button>`).join("")}</div>
+<div class="cats">${GEN.map(c=>`<button data-gen="${c}" class="${c==S.gen?"on":""}">${c}</button>`).join("")}</div>
+${ids.sort((a,b)=>!S.int[A[a].tp]-!S.int[A[b].tp]).map(card).join("")||`<div class="empty">${S.feed?"آپ نے ابھی کسی لکھاری کو فالو نہیں کیا۔":"اس صنف میں ابھی کوئی تحریر نہیں۔"}<br><button class="lnk" data-go="${S.feed?"explore":"write"}">${S.feed?"تلاش کھولیں":"پہلی تحریر لکھیں"}</button></div>`}`},
+explore:()=>`<div class="hdr"><label class="search" style="flex:1"><span style="display:inline-flex">${ic("search",18)}</span><input data-q value="${esc(S.q)}" placeholder="تحریر یا لکھاری تلاش کریں…"></label></div>
+<div class="pad" style="padding-bottom:0"><b>موضوعات</b></div><div class="cats" style="flex-wrap:wrap">${TOP.map(c=>`<button data-tp="${c}" class="${c==S.tp?"on":""}">${c}</button>`).join("")}</div>
+<div class="pad" style="padding-bottom:0"><b>تازہ ترین تحریریں</b></div><div id="res">${exRes()}</div>`,
+write:()=>{const w=S.w;return `${hd(w.eid?"تحریر ایڈٹ کریں":"نئی تحریر",`<button class="pill" data-pub>${w.eid?"اپ ڈیٹ کریں":"شائع کریں"}</button>`)}
+<div class="pad"><div style="display:flex;align-items:center;justify-content:space-between"><span class="mu" style="font-size:12px">${w.eid?"تبدیلیاں محفوظ کرنے کے لیے اپ ڈیٹ کریں":"واپس جانے پر مسودہ خود محفوظ ہو جاتا ہے"}</span>${w.eid?"":`<button class="lnk" data-dl>مسودے (${S.dr.length})</button>`}</div>
+<input class="fld ${w.bad?"bad":""}" data-w="t" value="${esc(w.t)}" maxlength="160" placeholder="عنوان لکھیں" aria-label="عنوان" style="margin-top:4px">
+<div class="row" style="margin-top:10px">صنف${sel("g",GEN.slice(1))}</div><div class="row">موضوع${sel("tp",TOP)}</div>
+<div class="tools"><button data-fm="b" aria-label="موٹا"><b>B</b></button><button data-fm="i" aria-label="ترچھا"><i>I</i></button><button data-fm="q" aria-label="اقتباس">${ic("quote",18)}</button></div>
+<textarea class="fld" data-w="b" rows="8" aria-label="تحریر" style="${w.g=="شاعری"?"text-align:center;font-family:'Noto Nastaliq Urdu',serif;line-height:2.3":""}" placeholder="${w.g=="شاعری"?"ہر مصرع نئی لائن میں لکھیں…":"اپنی تحریر یہاں لکھیں…"}">${esc(w.b)}</textarea>
+<div style="margin-top:10px">${w.cov?`<div class="row" style="gap:10px"><img class="thumb" src="${w.cov}" alt="کور تصویر"><span>کور تصویر</span><button class="lnk" data-x="covx" style="margin-inline-start:auto;color:var(--hr)">ہٹائیں</button></div>`:`<label class="row" style="cursor:pointer"><input type="file" accept="image/jpeg,image/png,image/webp" data-cov hidden>${ic("image",18)} کور تصویر شامل کریں<span style="margin-inline-start:auto;display:inline-flex">${ic("chev",16)}</span></label>`}
+<div class="row" data-sw>تعاون کی سہولت فعال کریں<span class="sw ${w.d?"on":""}"></span></div></div></div>`},
+article:()=>{const a=A[S.art],f=S.fl[a.by],poem=a.g=="شاعری",ls=a.b.split("\n").filter(Boolean),
+fs=[15,17,19,22][S.fs],fam=S.nk?"'Noto Nastaliq Urdu',serif":"inherit",lh=S.nk?2.5:2.1;
+const body=poem?ls.map((l,i)=>i%2?"":`<div class="cpl">${l}<br>${ls[i+1]||""}</div>`).join(""):ls.map(p=>`<p>${fmt(p)}</p>`).join("");
+return `${hd("",`<button class="ic" data-rc aria-label="پڑھنے کی ترتیب">${ic("type")}</button><button class="ic" data-sheet="more" aria-label="مزید">${ic("more")}</button>`)}
+${S.rc?`<div class="rp">سائز<button data-fs="-1">چھوٹا</button><button data-fs="1">بڑا</button><button data-nk>${S.nk?"نسخ میں پڑھیں":"نستعلیق میں پڑھیں"}</button></div>`:""}
+${poem?"":art(a,170).replace("border-radius:12px","border-radius:0")}
+<div class="pad"><h1 class="hl" style="font-size:24px">${a.t}</h1><div class="who" data-au="${a.by}" style="margin:6px 0 12px;cursor:pointer">${av(a.by)}<div><b>${a.by}</b><small>${a.tm} · ${a.g}</small></div>${a.by==S.me.n?"":`<button class="fol ${f?"on":""}" data-fl="${a.by}">${f?"فالو کر رہے ہیں":"فالو"}</button>`}</div>
+<div class="body" style="font-size:${fs}px;line-height:${lh};font-family:${fam}">${body}</div>
+${a.by==S.me.n||a.sp===false?"":`<div class="sup"><p>تحریر پسند آئی؟ لکھاری کی حوصلہ افزائی کریں۔</p><button class="btn au" data-sheet="donate">تعاون کریں</button></div>`}</div>
+<div class="bar">${acts(S.art)}</div>`},
+comments:()=>{const c=CM[S.art]||[];return `${hd("تبصرے ("+c.length+")")}${c.map((x,i)=>{const mine=x[0]==S.me.n,own=A[S.art].by==S.me.n;return `<div class="cm${x[2]?" rep":""}"><b>${x[0]}</b>${x[1]}<div class="acts" style="margin:2px 0 0">${mine?"":`<button data-rpl="${x[0]}">جواب</button><button data-x="rep" data-v="comment">رپورٹ</button>`}${mine||own?`<button data-cdel="${i}" style="color:var(--hr)">حذف</button>`:""}</div></div>`}).join("")||'<div class="empty">ابھی کوئی تبصرہ نہیں۔ پہلا تبصرہ آپ کریں۔</div>'}
+<div class="cin"><input class="fld" id="cin" value="${S.rp?"@"+S.rp+" ":""}" placeholder="تبصرہ لکھیں…" aria-label="تبصرہ"><button class="ic" data-csend aria-label="بھیجیں" style="color:var(--g)">${ic("send")}</button></div>`},
+notif:()=>`<div class="hdr"><span class="rt"></span><h2>اطلاعات</h2><span class="rt">${nu()?`<button class="lnk" data-nall style="font-size:13px">سب پڑھ لیے</button>`:""}</span></div>${S.nt.map((n,i)=>`<div class="li" data-nt="${i}" style="${n.r?"":"background:var(--gs)"}">${av(n.a||"ت")}<div><b style="font-weight:${n.r?400:700}">${n.x}</b><small>${n.tm}</small></div></div>`).join("")||'<div class="empty">کوئی نئی اطلاع نہیں۔</div>'}`,
+profile:()=>{const l=S.tab?Object.keys(S.sv).filter(k=>S.sv[k]):S.own;
+return `<div class="hdr" style="border:0"><span class="rt"></span><span></span><button class="ic" data-go="settings" aria-label="ترتیبات">${ic("sliders")}</button></div>
+<div style="text-align:center">${av(S.me.n,88)}<div style="font-size:20px;font-weight:700">${S.me.n}</div><div class="mu" style="direction:ltr">@${S.me.h}</div>${S.me.bio?`<div class="mu" style="margin:2px 16px 0;font-size:14px">${S.me.bio}</div>`:""}${S.bact.length?`<div class="chips">${S.bact.map(bchip).join("")}</div>`:""}</div>
+<div class="stats"><div><b>${S.own.length+25}</b><span>تحریریں</span></div><button data-pp="me" data-pt="0"><b>${fm(12500-Object.keys(S.rm).length)}</b><span>فالوورز</span></button><button data-pp="me" data-pt="1"><b>${Object.values(S.fl).filter(Boolean).length}</b><span>فالونگ</span></button></div>
+<div class="pad" style="padding-top:0;display:flex;gap:8px"><button class="btn o" data-ep>پروفائل ایڈٹ کریں</button><button class="btn o" data-toast="پروفائل کا لنک کاپی ہو گیا">شیئر کریں</button></div>
+<div class="tabs">${["میری تحریریں","محفوظ"].map((t,i)=>`<button data-tab="${i}" class="${i==S.tab?"on":""}">${t}</button>`).join("")}</div>
+${l.map(li).join("")||'<div class="empty">ابھی کوئی تحریر محفوظ نہیں۔ تحریر پر نشان لگا کر بعد میں پڑھیں۔</div>'}`},
+drafts:()=>`${hd("مسودے")}${S.dr.map(d=>`<div class="li" data-dr="${d.id}"><div style="flex:1"><b>${esc(d.t)||"بغیر عنوان"}</b><small>${esc(d.b.slice(0,50))||"خالی"} · ${d.g}</small></div><button class="lnk" data-ddr="${d.id}" style="color:var(--hr)">ڈیلیٹ</button></div>`).join("")||'<div class="empty">کوئی مسودہ نہیں۔ لکھتے ہوئے واپس جائیں تو مسودہ یہاں محفوظ ہو جاتا ہے۔</div>'}`,
+author:()=>{const n=S.au,u=U[n]||["",0,0,""],ids=S.home.filter(i=>A[i].by==n),f=S.fl[n];
+return `${hd(n,`<button class="ic" data-sheet="amore" aria-label="مزید">${ic("more")}</button>`)}<div style="text-align:center;padding:14px 16px 0">${av(n,88)}<div style="font-size:20px;font-weight:700">${n}</div><div class="mu" style="direction:ltr">@${u[0]}</div>${u[3]?`<div class="mu" style="font-size:14px">${u[3]}</div>`:""}${(BA[n]||[]).length?`<div class="chips">${BA[n].map(bchip).join("")}</div>`:""}</div>
+<div class="stats"><div><b>${ids.length}</b><span>تحریریں</span></div><button data-pp="${n}" data-pt="0"><b>${fm(u[1]+(f?1:0))}</b><span>فالوورز</span></button><button data-pp="${n}" data-pt="1"><b>${u[2]}</b><span>فالونگ</span></button></div>
+<div class="pad" style="padding-top:0;display:flex;gap:8px"><button class="btn ${f?"o":""}" data-fl="${n}">${f?"فالو کر رہے ہیں":"فالو"}</button><button class="btn au" data-sheet="donate">تعاون کریں</button></div>
+<div class="tabs"><button class="on">تحریریں</button></div>${ids.map(li).join("")||'<div class="empty">اس لکھاری نے ابھی کوئی تحریر شائع نہیں کی۔</div>'}`},
+people:()=>{const me=S.pp=="me",n=me?S.me.n:S.pp,t=S.pt,u=U[n]||["",0,0,""],b=PEOPLE.filter(x=>x!=n);
+const l=me?(t?b.filter(x=>S.fl[x]):b.filter(x=>!S.rm[x])):(t?b.slice(2,7):b.slice(0,5));
+const cnt=[me?fm(12500-Object.keys(S.rm).length):fm(u[1]),me?Object.values(S.fl).filter(Boolean).length:u[2]];
+return `${hd(n)}<div class="tabs">${["فالوورز","فالونگ"].map((x,i)=>`<button data-pt="${i}" class="${i==t?"on":""}">${x} (${cnt[i]})</button>`).join("")}</div>
+${me&&!t?'<div class="pad mu" style="padding-bottom:0;font-size:13px">حالیہ فالوورز</div>':""}
+${l.map(x=>`<div class="li" data-au="${x}">${av(x)}<div><b>${x}</b><small style="display:block;direction:ltr;text-align:right">@${U[x][0]}</small></div>${me&&!t?`<button class="lnk" data-rm="${x}" style="margin-inline-start:auto;color:var(--hr)">ہٹائیں</button>`:fbtn(x)}</div>`).join("")||'<div class="empty">ابھی یہاں کوئی نہیں۔</div>'}`},
+editp:()=>{const m=S.ed;return `${hd("پروفائل ایڈٹ کریں",'<button class="pill" data-psave>محفوظ کریں</button>')}
+<div class="pad" style="text-align:center"><button class="avw" data-sheet="pic" aria-label="تصویر تبدیل کریں"><span class="av" style="width:96px;height:96px;font-size:40px;margin:0;color:${m.pic?"transparent":"var(--on)"};background:${m.pic?`url(${m.pic}) center/cover`:"var(--g)"}">${(m.n||"؟")[0]}</span><span class="cam">${ic("camera",16)}</span></button><div><button class="lnk" data-sheet="pic">تصویر تبدیل کریں</button></div></div>
+<div class="pad" style="padding-top:0"><label class="mu">نام</label><input class="fld" data-e="n" value="${esc(m.n||"")}">
+<label class="mu" style="display:block;margin-top:10px">ہینڈل</label><input class="fld ltr" data-e="h" value="${esc(m.h||"")}" maxlength="24" autocapitalize="none" autocomplete="off" spellcheck="false"><div class="mu hint">صرف انگریزی چھوٹے حروف، اعداد اور _ (3 سے 24 حروف)</div>
+<label class="mu" style="display:block;margin-top:10px">تعارف</label><textarea class="fld" data-e="bio" rows="3" maxlength="300" placeholder="اپنے بارے میں چند الفاظ…">${esc(m.bio||"")}</textarea><label class="mu lbl">ملک</label><select class="fld" data-e="c">${opts(COUNTRIES,m.c||"")}</select></div>
+<div class="pad" style="padding-top:0"><b>تعاون وصول کرنے کی تفصیل</b><div class="mu" style="font-size:12px">یہ تفصیل قارئین کو تعاون بھیجتے وقت دکھائی جائے گی۔ جو خانہ خالی ہو گا وہ نہیں دکھایا جائے گا۔</div>${payF(m)}<div class="row" data-x="posw" role="switch" aria-checked="${!!m.po}" style="margin-top:12px;cursor:pointer">قارئین کو یہ تفصیل دکھائیں<span class="sw ${m.po?"on":""}"></span></div></div>`},
+settings:()=>`${hd("ترتیبات")}<div class="pad" style="padding-bottom:4px"><b>تھیم</b></div><div class="thm">${TH.map(t=>`<button data-th="${t[0]}" class="${S.th==t[0]?"on":""}" aria-pressed="${S.th==t[0]}"><i style="background:${t[2]}">${t[3]?`<b style="background:${t[3]}"></b>`:""}</i>${t[1]}</button>`).join("")}</div>
+${[["heart","تعاون کی تاریخ"],["mail","مدد اور رابطہ"]].map(x=>`<button class="mrow" data-toast="جلد دستیاب ہو گا">${ic(x[0])}${x[1]}<span style="margin-inline-start:auto;color:var(--mu)">${ic("chev",16)}</span></button>`).join("")}
+<button class="mrow" data-x="logout">${ic("out")}لاگ آؤٹ</button><button class="mrow rd" data-sheet="del">${ic("trash")}اکاؤنٹ ڈیلیٹ کریں</button>`};
+
+const FAQ=[["تحریر کیسے شائع کروں؟","نیچے درمیان میں + دبائیں، عنوان اور متن لکھیں اور اوپر شائع کریں پر ٹیپ کریں۔ واپس جانے پر مسودہ خود محفوظ ہو جاتا ہے۔"],["تعاون کیسے وصول ہوتا ہے؟","پروفائل ایڈٹ میں جاز کیش اور ایزی پیسہ کا QR اور بینک کی تفصیل لگائیں۔ قارئ آپ کے اپنے اکاؤنٹ میں رقم بھیجتا ہے۔"],["کسی تحریر یا تبصرے کی رپورٹ کیسے کروں؟","تحریر پر تین نقطوں سے رپورٹ چنیں۔ تبصرے کے نیچے رپورٹ کا بٹن ہے۔"],["اپنا اکاؤنٹ کیسے ڈیلیٹ کروں؟","پروفائل میں ترتیبات کھولیں اور اکاؤنٹ ڈیلیٹ کریں پر ٹیپ کریں۔"]];
+const RC=[["سارہ خان",500,"2 گھنٹے پہلے","s"],["محمد علی",100,"1 دن پہلے","a"],["گمنام قارئ",1000,"3 دن پہلے","c"]];
+const LG={t:["شرائط و ضوابط",["آپ اپنی شائع کی ہوئی تحریروں کے خود ذمہ دار ہیں۔","نفرت، دھمکی اور دوسروں کی تحریر چرانا منع ہے۔ ایسی تحریر ہٹائی جا سکتی ہے۔","تعاون قارئین اور لکھاری کے درمیان براہ راست ہوتا ہے، ایپ اس کی ضمانت نہیں دیتی۔","خلاف ورزی پر اکاؤنٹ معطل یا بند کیا جا سکتا ہے۔"]],p:["پرائیویسی پالیسی",["ہم آپ کا نام، ہینڈل، تصویر اور تعارف محفوظ کرتے ہیں۔","آپ کی تعاون کی تفصیل (QR اور بینک) صرف اسی وقت دکھائی جاتی ہے جب کوئی تعاون کرنا چاہے۔","فون نمبر صرف لاگ اِن کی تصدیق کے لیے استعمال ہوتا ہے اور دوسروں کو نہیں دکھایا جاتا۔","اکاؤنٹ ڈیلیٹ کرنے پر آپ کی تحریریں اور ڈیٹا حذف کر دیا جاتا ہے۔"]]};
+const fmt=s=>s.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\*(.+?)\*/g,"<i>$1</i>").replace(/^&gt; (.*)$/,'<span style="display:block;border-inline-start:3px solid var(--au);padding-inline-start:10px;color:var(--mu)">$1</span>');
+R.splash=()=>`<div class="splash"><div class="brand"><div class="wm">ہم لکھاری</div><div class="wl">HUM LIKHARI</div></div>
+<div class="go"><button class="btn" data-x="login"><span class="gi"><svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg></span>گوگل سے جاری رکھیں</button><button class="btn o" data-go="phone">${ic("phone",20)}فون نمبر سے جاری رکھیں</button><button class="lnk" style="color:var(--mu);padding:10px" data-x="guest">اکاؤنٹ کے بغیر پڑھیں</button></div>
+<div class="mu" style="font-size:12px;margin-top:auto;padding-top:18px">جاری رکھنے پر آپ <button class="lnk" style="font-size:12px;padding:0" data-lg="t">شرائط</button> اور <button class="lnk" style="font-size:12px;padding:0" data-lg="p">پرائیویسی پالیسی</button> سے اتفاق کرتے ہیں۔</div></div>`;
+R.phone=()=>`${hd("فون نمبر")}<div class="pad"><p class="mu">اپنا موبائل نمبر درج کریں۔ ہم آپ کو 6 ہندسوں کا تصدیقی کوڈ بھیجیں گے۔</p><input class="fld" data-o="ph" value="${S.ob.ph}" inputmode="tel" placeholder="03XX XXXXXXX" aria-label="موبائل نمبر" style="direction:ltr;text-align:left;font-size:18px"><button class="btn" style="margin-top:12px" data-ph>کوڈ بھیجیں</button></div>`;
+R.otp=()=>`${hd("تصدیقی کوڈ")}<div class="pad"><p class="mu">کوڈ <bdi dir="ltr">${S.ob.ph}</bdi> پر بھیجا گیا ہے۔</p><input class="fld" data-o="otp" value="${S.ob.otp}" inputmode="numeric" maxlength="6" placeholder="------" aria-label="تصدیقی کوڈ" style="direction:ltr;text-align:center;font-size:24px;letter-spacing:8px"><button class="btn" style="margin-top:12px" data-otpv>تصدیق کریں</button><button class="lnk" id="rs" style="width:100%;margin-top:6px" data-x="resend" ${S.otpLeft>0?"disabled":""}>${S.otpLeft>0?"دوبارہ کوڈ بھیجیں ("+S.otpLeft+")":"دوبارہ کوڈ بھیجیں"}</button></div>`;
+R.interests=()=>`${hd("اپنی پسند چنیں")}<div class="pad" style="padding-bottom:0"><b>آپ کن موضوعات میں دلچسپی رکھتے ہیں؟</b></div><div class="cats" style="flex-wrap:wrap">${TOP.map(c=>`<button data-int="${c}" class="${S.int[c]?"on":""}">${c}</button>`).join("")}</div>
+<div class="pad" style="padding-bottom:0"><b>ان لکھاریوں کو فالو کریں</b></div>${PEOPLE.slice(0,4).map(x=>`<div class="li" data-au="${x}">${av(x)}<div><b>${x}</b><small>${U[x][3]||"@"+U[x][0]}</small></div>${fbtn(x)}</div>`).join("")}
+${S.H[S.H.length-1]=="settings"?`<div class="pad"><button class="btn" data-back>محفوظ کریں</button></div>`:`<div class="pad"><button class="btn" data-go="survey">جاری رکھیں</button><button class="lnk" style="width:100%;margin-top:4px" data-go="survey">ابھی چھوڑیں</button></div>`}`;
+R.settings=()=>`${hd("ترتیبات")}<div class="pad" style="padding-bottom:4px"><b>تھیم</b></div><div class="thm">${TH.map(t=>`<button data-th="${t[0]}" class="${S.th==t[0]?"on":""}" aria-pressed="${S.th==t[0]}"><i style="background:${t[2]}">${t[3]?`<b style="background:${t[3]}"></b>`:""}</i>${t[1]}</button>`).join("")}</div>
+${[["sliders","میری پسند","interests"],["heart","تعاون کی تاریخ","history"],["block","بلاک کیے گئے لوگ","blocked"],["users","ہماری ٹیم میں شامل ہوں","team"],["award","لکھاری بیج کی درخواست","badges"],["gift","پلیٹ فارم کی معاونت","platform"],["mail","مدد اور رابطہ","help"],["doc","شرائط و ضوابط","t"],["lock","پرائیویسی پالیسی","p"]].map(x=>`<button class="mrow" ${x[2].length>1?`data-go="${x[2]}"`:`data-lg="${x[2]}"`}>${ic(x[0])}${x[1]}<span style="margin-inline-start:auto;color:var(--mu)">${ic("chev",16)}</span></button>`).join("")}
+<button class="mrow" data-x="logout">${ic("out")}لاگ آؤٹ</button><button class="mrow rd" data-sheet="del">${ic("trash")}اکاؤنٹ ڈیلیٹ کریں</button>`;
+R.history=()=>{const t=S.ht,l=t?S.dh.map(x=>[x.to,x.amt,x.tm]):RC,tot=l.reduce((s,x)=>s+x[1],0);
+return `${hd("تعاون کی تاریخ")}<div class="tabs">${["موصول","بھیجے گئے"].map((x,i)=>`<button data-ht="${i}" class="${i==t?"on":""}">${x}</button>`).join("")}</div><div class="pad"><span class="mu">کل رقم</span><b style="display:block;font-size:22px">${tot} روپے</b></div>${l.map(x=>`<div class="li" style="cursor:default">${av(x[0])}<div><b>${x[0]}</b><small>${x[2]}</small></div><b style="margin-inline-start:auto">${x[1]} روپے</b></div>`).join("")||'<div class="empty">ابھی کوئی ریکارڈ نہیں۔</div>'}<div class="pad mu" style="font-size:12px">رقم لکھاری کے اپنے اکاؤنٹ میں جاتی ہے۔ ایپ صرف وہی ریکارڈ دکھاتی ہے جو بھیجنے والے نے “میں نے رقم بھیج دی” سے درج کیا ہو۔</div>`};
+R.help=()=>`${hd("مدد اور رابطہ")}${FAQ.map((f,i)=>`<button class="mrow" data-fq="${i}" style="flex-wrap:wrap"><b style="flex:1;text-align:start">${f[0]}</b>${ic(S.fq===i?"down":"chev",16)}${S.fq===i?`<div class="mu" style="width:100%;text-align:start;font-size:14px">${f[1]}</div>`:""}</button>`).join("")}<div class="pad"><b>ہم سے رابطہ کریں</b><textarea class="fld" id="hm" rows="4" style="margin-top:6px" placeholder="اپنا مسئلہ یا تجویز لکھیں…" aria-label="پیغام">${esc(S.hm)}</textarea><button class="btn" style="margin-top:8px" data-hsend>پیغام بھیجیں</button></div>`;
+R.legal=()=>{const l=LG[S.lg];return `${hd(l[0])}<div class="pad body"><div class="mu" style="font-size:12px;margin-bottom:8px">نمونہ متن — اصل ایپ میں قانونی ماہر سے تیار کروائیں۔</div>${l[1].map(p=>`<p>${p}</p>`).join("")}</div>`};
+const SH={pic:()=>`<h3 class="hl" style="font-size:19px">پروفائل تصویر</h3>
+<label class="mrow" style="cursor:pointer"><input type="file" accept="image/*" data-pic hidden>${ic("image")}گیلری سے منتخب کریں</label>
+<label class="mrow" style="cursor:pointer"><input type="file" accept="image/*" capture="user" data-pic hidden>${ic("camera")}کیمرہ سے تصویر لیں</label>
+${S.ed.pic?`<button class="mrow rd" data-picx>${ic("trash")}موجودہ تصویر ہٹائیں</button>`:""}`,share:()=>{const a=A[S.art],q=a.b.split("\n").filter(Boolean).slice(0,a.g=="شاعری"?2:1).join("\n").replace(/\*/g,""),txt=un(q).slice(0,200)+"\n— "+un(a.by)+"، «"+un(a.t)+"» (ہم لکھاری)";
+return `<h3 class="hl" style="font-size:19px">شیئر کریں</h3><div style="border-radius:16px;padding:18px;margin:10px 0;color:#fff;text-align:center;background:${G[a.k]}"><div class="hl" style="font-size:18px;line-height:2.4">${q.replace(/\n/g,"<br>")}</div><div style="font-size:13px;margin-top:6px;opacity:.9">${a.by} · ${a.t}</div><div style="font:700 15px 'Noto Naskh Arabic',serif;margin-top:8px;opacity:.9">ہم لکھاری</div></div><a class="btn" style="background:#1f9d55;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}">واٹس ایپ پر بھیجیں</a><button class="btn o" style="margin-top:8px" data-cpy="${esc(txt)}">متن کاپی کریں</button>`},
+donate:()=>S.dp?payStep():`<h3 class="hl" style="font-size:19px">لکھاری کی حوصلہ افزائی</h3><div class="mu">اپنی پسند کی رقم منتخب کریں۔</div>
+<div class="amts">${[100,500,1000,2000].map(v=>`<button data-amt="${v}" class="${v==S.amt?"on":""}">${v} روپے</button>`).join("")}</div>
+
+<button class="btn au" data-send>والیٹ سے ${S.amt} روپے بھیجیں</button>`,
+more:()=>A[S.art].by==S.me.n?`<button class="mrow" data-close data-toast="لنک کاپی ہو گیا" style="padding-inline:4px">${ic("link")}لنک کاپی کریں</button><button class="mrow" data-ea style="padding-inline:4px">${ic("edit")}تحریر ایڈٹ کریں</button><button class="mrow rd" data-sheet="delart" style="padding-inline:4px">${ic("trash")}تحریر ڈیلیٹ کریں</button>`:[["link","لنک کاپی کریں","لنک کاپی ہو گیا"],["flag","تحریر رپورٹ کریں","رپورٹ موصول ہو گئی"],["block","لکھاری کو بلاک کریں","لکھاری بلاک کر دیا گیا"]].map(x=>`<button class="mrow" data-close data-toast="${x[2]}" style="padding-inline:4px">${ic(x[0])}${x[1]}</button>`).join(""),
+delart:()=>`<h3 class="hl" style="font-size:19px">تحریر ڈیلیٹ کریں؟</h3><p class="mu">یہ تحریر اور اس کے تبصرے مستقل طور پر حذف ہو جائیں گے۔</p><button class="btn rd" data-dela>ڈیلیٹ کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`,
+del:()=>`<h3 class="hl" style="font-size:19px">اکاؤنٹ ڈیلیٹ کریں؟</h3><p class="mu">آپ کی تمام تحریریں اور ڈیٹا مستقل طور پر حذف ہو جائیں گے۔ یہ عمل واپس نہیں ہو سکتا۔</p><button class="btn rd" data-del>ڈیلیٹ کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`};
+
+/* ===== v1.0: screens that exist in the implemented code ===== */
+R.survey=()=>`${hdt("آپ نے ہمارے بارے میں کیسے سنا؟")}<div class="pad" style="padding-bottom:0"><span class="mu">یہ جواب صرف یہ سمجھنے کے لیے ہے کہ لوگ ہم تک کیسے پہنچتے ہیں۔</span></div><div class="cats wrap">${SURVEY.map(x=>`<button data-x="src" data-v="${x[0]}" class="${S.sv2.src==x[0]?"on":""}" aria-pressed="${S.sv2.src==x[0]}">${x[1]}</button>`).join("")}</div>${S.sv2.src=="other"?`<div class="pad" style="padding-top:0"><input class="fld" data-fx="sv.other" value="${esc(fxv("sv.other",""))}" maxlength="200" placeholder="مختصراً بتائیں" aria-label="دیگر ذریعہ"></div>`:""}<div class="pad"><button class="btn" data-x="svs" data-v="1">جمع کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-x="svs" data-v="0">ابھی چھوڑیں</button></div>`;
+R.blocked=()=>{const l=Object.keys(S.bl).filter(k=>S.bl[k]);return `${hd("بلاک کیے گئے لوگ")}${l.map(x=>`<div class="li" style="cursor:default">${av(x)}<div><b>${x}</b><small style="display:block;direction:ltr;text-align:right">@${(U[x]||[""])[0]}</small></div><button class="fol" data-x="unb" data-v="${x}" style="margin-inline-start:auto">ان بلاک</button></div>`).join("")||'<div class="empty">آپ نے کسی کو بلاک نہیں کیا۔</div>'}`};
+R.team=()=>{const pend=S.tm.some(a=>["received","in_review"].includes(a.st));return `${hd("ہماری ٹیم میں شامل ہوں")}<div class="pad"><p class="mu">ہم لکھاری کو بہتر بنانے میں مدد کرنا چاہتے ہیں؟ اپنے بارے میں بتائیں، ٹیم جائزہ لے کر رابطہ کرے گی۔</p>${pend?`<div class="notice">آپ کی ایک درخواست پہلے سے زیرِ جائزہ ہے۔</div>`:`<label class="mu" for="tma">کس شعبے میں؟</label><select class="fld" id="tma" data-fx="tm.area">${opts(TEAMA,fxv("tm.area","proofreading"))}</select><label class="mu lbl">آپ ہمارے ساتھ کیوں کام کرنا چاہتے ہیں؟ (کم از کم 20 حروف)</label><textarea class="fld" data-fx="tm.why" rows="4" maxlength="3000" aria-label="وجہ">${esc(fxv("tm.why",""))}</textarea><label class="mu lbl">مہارتیں (اختیاری)</label><textarea class="fld" data-fx="tm.skills" rows="2" maxlength="1500" aria-label="مہارتیں">${esc(fxv("tm.skills",""))}</textarea><label class="mu lbl">دستیاب وقت (اختیاری)</label><input class="fld" data-fx="tm.avail" maxlength="300" value="${esc(fxv("tm.avail",""))}" aria-label="دستیاب وقت"><div class="mu hint">آپ کی درخواست صرف آپ اور ہماری ٹیم دیکھ سکتی ہے۔</div><button class="btn" style="margin-top:10px" data-x="tms">درخواست بھیجیں</button>`}</div><div class="pad" style="padding-bottom:0"><b>میری درخواستیں</b></div>${S.tm.map(a=>`<div class="li" style="cursor:default;flex-wrap:wrap"><div style="flex:1"><b>${lab(TEAMA,a.area)}</b><small>${a.tm}</small>${a.note?`<small class="note">ٹیم کا جواب: ${esc(a.note)}</small>`:""}</div>${chip(STX.team[a.st],tone(a.st))}</div>`).join("")||'<div class="empty">ابھی کوئی درخواست نہیں۔</div>'}`};
+R.badges=()=>{const pend=t=>S.bapp.some(a=>a.t==t&&["received","in_review"].includes(a.st)),ch=BADGET.filter(b=>!S.bact.includes(b[0])&&!pend(b[0])),sel=ch.some(b=>b[0]==S.fx["bd.type"])?S.fx["bd.type"]:(ch[0]&&ch[0][0])||"";
+return `${hd("لکھاری بیج")}<div class="pad"><p class="mu">بیج آپ کے پروفائل پر نظر آتا ہے۔ درخواست کا فیصلہ ہماری ٹیم کرتی ہے۔</p>${S.bact.length?`<div class="chips" style="justify-content:flex-start">${S.bact.map(bchip).join("")}</div>`:""}${ch.length?`<div class="cats wrap" style="padding-inline:0">${ch.map(b=>`<button data-x="bd" data-v="${b[0]}" class="${sel==b[0]?"on":""}" aria-pressed="${sel==b[0]}">${b[1]}</button>`).join("")}</div><div class="mu hint">${BADGEH[sel]||""}</div><label class="mu lbl">اپنے کام کے بارے میں (اختیاری)</label><textarea class="fld" data-fx="bd.note" rows="3" maxlength="2000" placeholder="اپنی بہترین تحریروں کا ذکر کریں" aria-label="نوٹ">${esc(fxv("bd.note",""))}</textarea><button class="btn" style="margin-top:10px" data-x="bds">درخواست بھیجیں</button>`:`<div class="notice">اس وقت کوئی نئی درخواست ممکن نہیں۔</div>`}</div><div class="pad" style="padding-bottom:0"><b>میری درخواستیں</b></div>${S.bapp.map(a=>`<div class="li" style="cursor:default;flex-wrap:wrap"><div style="flex:1"><b>${lab(BADGET,a.t)}</b><small>${a.tm}</small></div>${chip(STX.badge[a.st],tone(a.st))}</div>`).join("")||'<div class="empty">ابھی کوئی درخواست نہیں۔</div>'}`};
+R.platform=()=>{const pk=S.me.c=="PK",m=fxv("pf.method",PFA[0].m);return `${hd("پلیٹ فارم کی معاونت")}<div class="pad"><p class="mu">ہم لکھاری کو چلانے میں مدد کے لیے نیچے دیے گئے اکاؤنٹ میں رقم بھیجیں، پھر یہاں اطلاع درج کریں۔ ٹیم تصدیق کے بعد آپ کو بتائے گی۔ فی الحال یہ سہولت صرف پاکستان کے لیے ہے۔</p>
+${!pk?`<div class="notice">اس سہولت کے لیے پروفائل میں ملک “پاکستان” منتخب ہونا ضروری ہے۔ <button class="lnk" data-ep>پروفائل ایڈٹ کریں</button></div>`:`${PFA.map(a=>`<div class="acc"><div class="row" style="border:0;margin:0;padding:0">${lgm(a.m)}<b>${a.label||METH[a.m]}</b></div>${[["بینک",a.bank],["اکاؤنٹ ٹائٹل",a.title],["اکاؤنٹ نمبر / IBAN",a.id]].filter(r=>r[1]).map(r=>`<div class="dv"><span class="mu">${r[0]}</span><b>${esc(r[1])}</b><button class="lnk" data-cpy="${esc(r[1])}">کاپی</button></div>`).join("")}${a.ins?`<div class="mu" style="font-size:13px">${a.ins}</div>`:""}</div>`).join("")}<div class="mu" style="font-size:11px">ڈیزائن میں نمونہ اکاؤنٹ؛ اصل اکاؤنٹ admin کنسول کے "معاونت کے اکاؤنٹس" سیکشن میں درج ہوتے ہیں۔</div>
+<b style="display:block;margin-top:14px">رقم بھیجنے کے بعد اطلاع دیں</b><label class="mu lbl">رقم (روپے، کم از کم 100)</label><input class="fld ltr" data-fx="pf.amount" value="${esc(fxv("pf.amount",""))}" inputmode="numeric" maxlength="7" aria-label="رقم"><label class="mu lbl">طریقہ</label><select class="fld" data-fx="pf.method" aria-label="طریقہ">${opts(PFA.map(a=>[a.m,METH[a.m]]),m)}</select><label class="mu lbl">ٹرانزیکشن نمبر (اختیاری)</label><input class="fld ltr" data-fx="pf.ref" value="${esc(fxv("pf.ref",""))}" maxlength="120" aria-label="ٹرانزیکشن نمبر"><label class="mu lbl">پیغام (اختیاری)</label><textarea class="fld" data-fx="pf.note" rows="2" maxlength="1000" aria-label="پیغام">${esc(fxv("pf.note",""))}</textarea><button class="btn" style="margin-top:10px" data-x="pfs">اطلاع بھیجیں</button>`}</div><div class="pad" style="padding-bottom:0"><b>میری اطلاعات</b></div>${S.pf.map(d=>`<div class="li" style="cursor:default;flex-wrap:wrap"><div style="flex:1"><b>${d.amt} روپے</b><small>${METH[d.m]} · ${d.tm}</small>${d.note?`<small class="note">ٹیم کا جواب: ${esc(d.note)}</small>`:""}</div>${chip(STX.pf[d.st],tone(d.st))}</div>`).join("")||'<div class="empty">ابھی کوئی اطلاع نہیں۔</div>'}`};
+R.history=()=>{const t=S.ht,l=t?S.dh.map((x,i)=>({n:x.to,a:x.amt,tm:x.tm,s:x.st||"s",i,note:x.note})):RC.map((x,i)=>({n:x[0],a:x[1],tm:x[2],s:x[3]||"s",i})),tot=l.filter(x=>x.s!="c").reduce((q,x)=>q+x.a,0);
+return `${hd("تعاون کی تاریخ")}<div class="tabs">${["موصول","بھیجے گئے"].map((x,i)=>`<button data-ht="${i}" class="${i==t?"on":""}">${x}</button>`).join("")}</div><div class="pad"><span class="mu">کل درج شدہ رقم</span><b style="display:block;font-size:22px">${tot} روپے</b></div>${l.map(x=>`<div class="li" style="cursor:default;flex-wrap:wrap">${av(x.n)}<div style="flex:1"><b>${x.n}</b><small>${x.tm}</small>${x.note?`<small class="note">«${esc(x.note)}»</small>`:""}</div><b style="margin-inline-start:auto">${x.a} روپے</b><div style="width:100%;display:flex;gap:8px;align-items:center;margin-top:2px">${chip(CLS[x.s][0],CLS[x.s][1])}${!t&&x.s=="s"?`<button class="lnk" data-x="ack" data-v="${x.i}">رقم موصول ہوئی ✓</button>`:""}${t&&x.s=="s"?`<button class="lnk" data-x="cnl" data-v="${x.i}" style="color:var(--hr)">منسوخ کریں</button>`:""}</div></div>`).join("")||'<div class="empty">ابھی کوئی ریکارڈ نہیں۔</div>'}<div class="pad mu" style="font-size:12px">رقم لکھاری کے اپنے اکاؤنٹ میں جاتی ہے۔ ایپ صرف وہی ریکارڈ دکھاتی ہے جو بھیجنے والے نے “میں نے رقم بھیج دی” سے درج کیا ہو۔ لکھاری وصولی کی تصدیق کر سکتا ہے۔</div>`};
+R.help=()=>`${hd("مدد اور رابطہ")}${FAQ.map((f,i)=>`<button class="mrow" data-fq="${i}" style="flex-wrap:wrap"><b style="flex:1;text-align:start">${f[0]}</b>${ic(S.fq===i?"down":"chev",16)}${S.fq===i?`<div class="mu" style="width:100%;text-align:start;font-size:14px">${f[1]}</div>`:""}</button>`).join("")}<div class="pad"><b>ہم سے رابطہ کریں</b><select class="fld" data-fx="help.type" aria-label="پیغام کی قسم" style="margin-top:6px">${opts(FBT,fxv("help.type","question"))}</select><textarea class="fld" id="hm" rows="4" maxlength="5000" style="margin-top:6px" placeholder="اپنا مسئلہ یا تجویز لکھیں…" aria-label="پیغام">${esc(S.hm)}</textarea>${S.hf?`<div class="row" style="margin-top:6px">${ic("doc",18)}<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(S.hf)}</span><button class="lnk" data-x="hfx" style="color:var(--hr)">ہٹائیں</button></div>`:`<label class="row" style="margin-top:6px;cursor:pointer"><input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" data-hf hidden>${ic("image",18)} اسکرین شاٹ یا PDF لگائیں (اختیاری)</label>`}<button class="btn" style="margin-top:8px" data-hsend>پیغام بھیجیں</button></div><div class="pad" style="padding-bottom:0"><b>میرے پیغامات</b></div>${S.tk.map(t=>`<button class="li" data-x="tk" data-v="${t.id}" style="width:100%;text-align:start"><div style="flex:1"><b>${esc(t.msg.slice(0,60))}</b><small>#${t.n} · ${lab(FBT,t.type)} · ${t.tm}</small></div>${chip(STX.ticket[t.st],tone(t.st))}</button>`).join("")||'<div class="empty">آپ نے ابھی کوئی پیغام نہیں بھیجا۔</div>'}`;
+R.ticket=()=>{const t=S.tk.find(x=>x.id==S.tkid)||S.tk[0];if(!t)return hd("پیغام");const b=[["me","آپ",t.msg,t.tm],...t.th.map(m=>[m[0],m[0]=="me"?"آپ":"ہم لکھاری ٹیم",m[1],m[2]])];
+return `${hd("پیغام")}<div class="pad">${chip(STX.ticket[t.st],tone(t.st))} <small class="mu">#${t.n} · ${lab(FBT,t.type)}</small></div>${b.map(x=>`<div class="bub ${x[0]=="me"?"me":"them"}"><div>${esc(x[2])}</div><small>${x[1]} · ${x[3]}</small></div>`).join("")}${t.st=="closed"?`<div class="pad mu">یہ پیغام بند ہو چکا ہے۔ نیا مسئلہ ہو تو نیا پیغام بھیجیں۔</div>`:`<div class="cin"><input class="fld" id="tin" value="" maxlength="4000" placeholder="جواب لکھیں…" aria-label="جواب"><button class="ic" data-x="tks" aria-label="بھیجیں" style="color:var(--g)">${ic("send")}</button></div>`}`};
+R.suspended=()=>`<div class="splash"><div class="brand"><div class="wm">ہم لکھاری</div></div><div class="notice bad" role="alert">آپ کا اکاؤنٹ فی الحال معطل ہے۔ اگر آپ سمجھتے ہیں کہ یہ غلطی ہے تو ہم سے رابطہ کریں۔</div><div class="go"><button class="btn o" data-x="logout">${ic("out")}لاگ آؤٹ</button></div></div>`;
+R.states=()=>`${hd("حالتیں: لوڈنگ، خرابی، خالی")}<div class="pad"><b>لوڈ ہو رہا ہے</b></div><div class="empty" role="status"><span class="spin" aria-hidden="true"></span> لوڈ ہو رہا ہے…</div><div class="pad"><b>خرابی اور دوبارہ کوشش</b></div><div class="empty" role="alert">انٹرنیٹ یا سرور سے رابطہ نہیں ہو سکا۔<br><button class="lnk" data-toast="دوبارہ کوشش ہو رہی ہے">دوبارہ کوشش کریں</button></div><div class="pad"><b>خالی فہرست</b></div><div class="empty">آپ نے ابھی کوئی پیغام نہیں بھیجا۔</div><div class="pad"><b>غلطی کا نوٹس</b></div><div class="pad"><div class="notice bad" role="alert">رقم 10 سے 10,00,000 روپے کے درمیان ہونی چاہیے۔</div><b>معلوماتی نوٹس</b><div class="notice">آپ کی ایک درخواست پہلے سے زیرِ جائزہ ہے۔</div></div>`;
+
+/* ===== v1.0: sheets ===== */
+SH.signin=()=>`<h3 class="hl" style="font-size:19px">سائن اِن ضروری ہے</h3><p class="mu">${S.sig||"یہ کام کرنے"} کے لیے پہلے سائن اِن کریں۔</p><button class="btn" data-x="sg">سائن اِن کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`;
+SH.report=()=>{const r=S.rep||{t:"post",r:"",d:"",e:""};return `<h3 class="hl" style="font-size:19px">${r.t=="post"?"تحریر رپورٹ کریں":r.t=="comment"?"تبصرہ رپورٹ کریں":"لکھاری کو رپورٹ کریں"}</h3><div class="mu">وجہ منتخب کریں:</div><div class="cats wrap" style="padding-inline:0">${REASONS.map(x=>`<button data-x="rr" data-v="${x[0]}" class="${r.r==x[0]?"on":""}" aria-pressed="${r.r==x[0]}">${x[1]}</button>`).join("")}</div><textarea class="fld" data-rd rows="3" maxlength="2000" placeholder="مزید تفصیل (اختیاری)" aria-label="تفصیل">${esc(r.d)}</textarea>${r.e?`<div class="notice bad" role="alert">${r.e}</div>`:""}<button class="btn rd" style="margin-top:10px" data-x="rsend">رپورٹ بھیجیں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`};
+SH.block=()=>{const n=S.bt;return `<h3 class="hl" style="font-size:19px">لکھاری کو بلاک کریں؟</h3><p class="mu">${n?esc(n)+" کی تحریریں آپ کو نظر نہیں آئیں گی اور وہ آپ کی تحریروں پر تبصرہ یا تعاون نہیں کر سکیں گے۔ فالو بھی ختم ہو جائے گا۔":"اس لکھاری کی تحریریں آپ کو نظر نہیں آئیں گی اور فالو ختم ہو جائے گا۔"}</p><button class="btn rd" data-x="blkdo">بلاک کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`};
+SH.removed=()=>`<h3 class="hl" style="font-size:19px">مواد ہٹا دیا گیا</h3><p class="mu">آپ کا ایک مواد کمیونٹی اصولوں کی خلاف ورزی کی وجہ سے ہٹایا گیا ہے۔ اگر آپ کو لگتا ہے کہ غلطی ہوئی ہے تو مدد اور رابطہ میں ہمیں لکھیں۔</p><button class="btn" data-close>ٹھیک ہے</button>`;
+SH.amore=()=>{const n=S.au,b=S.bl[n];return `<button class="mrow" data-close data-toast="پروفائل کا لنک کاپی ہو گیا" style="padding-inline:4px">${ic("link")}پروفائل کا لنک کاپی کریں</button><button class="mrow" data-x="rep" data-v="user" style="padding-inline:4px">${ic("flag")}لکھاری کو رپورٹ کریں</button>${b?`<button class="mrow" data-x="unb" data-v="${esc(n)}" style="padding-inline:4px">${ic("block")}ان بلاک کریں</button>`:`<button class="mrow" data-x="blk" data-v="${esc(n)}" style="padding-inline:4px">${ic("block")}لکھاری کو بلاک کریں</button>`}`};
+SH.more=()=>A[S.art].by==S.me.n?`<button class="mrow" data-close data-toast="لنک کاپی ہو گیا" style="padding-inline:4px">${ic("link")}لنک کاپی کریں</button><button class="mrow" data-ea style="padding-inline:4px">${ic("edit")}تحریر ایڈٹ کریں</button><button class="mrow rd" data-sheet="delart" style="padding-inline:4px">${ic("trash")}تحریر ڈیلیٹ کریں</button>`:`<button class="mrow" data-close data-toast="لنک کاپی ہو گیا" style="padding-inline:4px">${ic("link")}لنک کاپی کریں</button><button class="mrow" data-x="rep" data-v="post" style="padding-inline:4px">${ic("flag")}تحریر رپورٹ کریں</button><button class="mrow" data-x="blk" data-v="${esc(A[S.art].by)}" style="padding-inline:4px">${ic("block")}لکھاری کو بلاک کریں</button>`;
+SH.del=()=>`<h3 class="hl" style="font-size:19px">اکاؤنٹ ڈیلیٹ کریں؟</h3><p class="mu">آپ کی تمام تحریریں اور ڈیٹا مستقل طور پر حذف ہو جائیں گے۔ یہ عمل واپس نہیں ہو سکتا۔ تصدیق کے لیے نیچے <b dir="ltr">DELETE</b> لکھیں۔</p><input class="fld ltr" data-dc value="${esc(S.dc)}" autocomplete="off" autocapitalize="characters" aria-label="تصدیق" placeholder="DELETE"><div class="mu hint">حفاظت کے لیے حذف سے پہلے حال ہی میں سائن اِن ہونا ضروری ہے؛ ضرورت ہو تو دوبارہ سائن اِن کا کہا جائے گا۔</div>${S.derr?`<div class="notice bad" role="alert">${S.derr}</div>`:""}<button class="btn rd" style="margin-top:10px" data-del>مستقل طور پر ڈیلیٹ کریں</button><button class="lnk" style="width:100%;margin-top:4px" data-close>منسوخ</button>`;
+SH.donate=()=>{if(S.dp)return payStep();const to=S.scr=="author"?S.au:A[S.art].by,p=payOf(to),ready=!!(p.jq||p.eq||(p.bn&&p.ba));return `<h3 class="hl" style="font-size:19px">لکھاری کی حوصلہ افزائی</h3><div class="mu">اپنی پسند کی رقم منتخب کریں۔ رقم آپ براہِ راست لکھاری کے اپنے اکاؤنٹ میں بھیجتے ہیں۔</div><div class="amts">${[100,500,1000,2000].map(v=>`<button data-amt="${v}" class="${!S.cust&&v==S.amt?"on":""}" aria-pressed="${!S.cust&&v==S.amt}">${v} روپے</button>`).join("")}</div><input class="fld ltr" data-cust value="${S.cust}" inputmode="numeric" maxlength="7" placeholder="دوسری رقم (10 سے 10,00,000)" aria-label="دوسری رقم">${ready?"":`<div class="notice">اس لکھاری نے ابھی تعاون کی تفصیل شامل نہیں کی۔</div>`}${S.dmsg?`<div class="notice bad" role="alert">${S.dmsg}</div>`:""}<button class="btn au" id="dnb" style="margin-top:12px" data-send ${ready?"":"disabled"}>${donLbl()}</button>`};
+
+/* ===== v1.0: new actions (data-x) ===== */
+function pickCov(f){if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type)){toast("صرف JPG، PNG یا WebP تصویر منتخب کریں");return}if(f.size>8*1024*1024){toast("تصویر 8 MB سے بڑی ہے");return}
+const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const z=Math.min(1,1200/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*z);c.height=Math.round(im.height*z);c.getContext("2d").drawImage(im,0,0,c.width,c.height);S.w.cov=c.toDataURL("image/jpeg",.85);go("write",1)};im.onerror=()=>toast("تصویر کھل نہیں سکی");im.src=r.result};r.readAsDataURL(f)}
+let otpT;function otpStart(){clearInterval(otpT);S.otpLeft=60;otpT=setInterval(()=>{S.otpLeft--;const b=$("#rs");if(b){b.disabled=S.otpLeft>0;b.textContent=S.otpLeft>0?"دوبارہ کوڈ بھیجیں ("+S.otpLeft+")":"دوبارہ کوڈ بھیجیں"}if(S.otpLeft<=0)clearInterval(otpT)},1000)}
+const X={
+login(){S.user=1;go("interests")},
+guest(){S.user=0;go("home")},
+logout(){S.user=0;S.sheet="";go("splash")},
+sg(){S.sheet="";go("splash")},
+resend(){otpStart();toast("نیا کوڈ بھیج دیا گیا");render()},
+src(d){S.sv2.src=d.v;go("survey",1)},
+svs(d){if(d.v=="1"&&!S.sv2.src){toast("پہلے ایک جواب منتخب کریں");return}S.sv2={src:""};if(d.v=="1")toast("شکریہ!");go("home")},
+covx(){S.w.cov="";go("write",1)},
+rep(d){if(!needAuth("رپورٹ بھیجنے"))return;S.rep={t:d.v,r:"",d:"",e:""};S.sheet="report";render()},
+rr(d){S.rep.r=d.v;S.rep.e="";render()},
+rsend(){if(!S.rep.r){S.rep.e="پہلے وجہ منتخب کریں۔";render();return}S.sheet="";S.rep=null;render();toast("رپورٹ موصول ہو گئی")},
+blk(d){if(!needAuth("بلاک کرنے"))return;S.bt=d.v;S.sheet="block";render()},
+blkdo(){const n=S.bt;S.bl[n]=1;S.fl[n]=0;S.sheet="";S.scr=S.H.pop()||"home";render();toast("لکھاری بلاک کر دیا گیا")},
+unb(d){delete S.bl[d.v];S.sheet="";S.scr=="blocked"?go("blocked",1):render();toast("لکھاری ان بلاک ہو گیا")},
+posw(){S.ed.po=!S.ed.po;go("editp",1)},
+ack(d){RC[+d.v][3]="a";go("history",1);toast("وصولی کی تصدیق ہو گئی")},
+cnl(d){S.dh[+d.v].st="c";go("history",1);toast("اطلاع منسوخ کر دی گئی")},
+tk(d){S.tkid=d.v;go("ticket")},
+tks(){const t=S.tk.find(x=>x.id==S.tkid),v=($("#tin").value||"").trim();if(!v){toast("پہلے جواب لکھیں");return}t.th.push(["me",v,"ابھی"]);go("ticket",1)},
+hfx(){S.hf="";const m=$("#hm");if(m)S.hm=m.value;go("help",1)},
+tms(){if(!needAuth("درخواست بھیجنے"))return;const why=(S.fx["tm.why"]||"").trim();if(why.length<20){toast("اپنے بارے میں کم از کم 20 حروف لکھیں");return}S.tm.unshift({area:fxv("tm.area","proofreading"),st:"received",tm:"ابھی"});["tm.why","tm.skills","tm.avail"].forEach(k=>delete S.fx[k]);go("team",1);toast("آپ کی درخواست موصول ہو گئی")},
+bd(d){S.fx["bd.type"]=d.v;go("badges",1)},
+bds(){if(!needAuth("درخواست بھیجنے"))return;const pend=t=>S.bapp.some(a=>a.t==t&&["received","in_review"].includes(a.st)),ch=BADGET.filter(b=>!S.bact.includes(b[0])&&!pend(b[0])),t=ch.some(b=>b[0]==S.fx["bd.type"])?S.fx["bd.type"]:(ch[0]||[])[0];if(!t)return;S.bapp.unshift({t,st:"received",tm:"ابھی"});delete S.fx["bd.note"];go("badges",1);toast("آپ کی درخواست موصول ہو گئی")},
+pfs(){if(!needAuth("اطلاع درج کرنے"))return;const a=+String(S.fx["pf.amount"]||"").replace(/\D/g,"");if(!(a>=100&&a<=5000000)){toast("رقم 100 سے 50,00,000 روپے کے درمیان ہونی چاہیے");return}S.pf.unshift({amt:a,m:fxv("pf.method",PFA[0].m),st:"submitted",tm:"ابھی"});["pf.amount","pf.ref","pf.note"].forEach(k=>delete S.fx[k]);go("platform",1);toast("شکریہ! آپ کی اطلاع موصول ہو گئی")},
+dev(d){S.user=1;S.sheet="";S.dp=0;const k=d.v;
+ if(k.startsWith("sh:")){const n=k.slice(3),B={signin:["home"],report:["article"],block:["author"],del:["settings"],removed:["notif"]}[n];
+  S.H=["home"];S.art=n=="report"?"a2":"a1";S.au="سارہ خان";
+  if(n=="report")S.rep={t:"post",r:"",d:"",e:""};if(n=="block")S.bt="سارہ خان";if(n=="signin"){S.user=0;S.sig="تحریر پسند کرنے"}if(n=="del"){S.dc="";S.derr=""}
+  S.scr=B[0];S.sheet=n;render()}
+ else{S.H=["home"];if(k=="ticket")S.tkid="t1";go(k)}}
+};
+const DEVS=[["states","حالتیں"],["survey","سروے"],["team","ٹیم میں شمولیت"],["badges","لکھاری بیج"],["platform","پلیٹ فارم معاونت"],["blocked","بلاک فہرست"],["ticket","ٹکٹ کی گفتگو"],["suspended","معطل اکاؤنٹ"],["sh:signin","شیٹ: سائن اِن ضروری"],["sh:report","شیٹ: رپورٹ"],["sh:block","شیٹ: بلاک"],["sh:del","شیٹ: ڈیلیٹ (DELETE)"],["sh:removed","شیٹ: مواد ہٹایا گیا"]];
+$("#dev").innerHTML="<b>کوڈ میں شامل اضافی اسکرینیں:</b>"+DEVS.map(x=>`<button data-x="dev" data-v="${x[0]}">${x[1]}</button>`).join("");
+
+function go(s,keep){
+if(!keep&&s!=S.scr){if(TB.includes(s)||s=="splash")S.H=[];else S.H.push(S.scr)}S.scr=s;S.keep=keep;render()}
+const bn=()=>{$("#off").className=navigator.onLine?"":"on"};
+function render(){const sc=$("#screen"),st=sc.scrollTop;sc.innerHTML=R[S.scr]();if(S.scr=="crop")crUp();sc.scrollTop=S.keep?st:0;S.keep=0;
+$("#phone").classList.toggle("tb",TB.includes(S.scr));bn();
+$("#tabbar").innerHTML=[["home","home","ہوم"],["explore","search","تلاش"],["write","plus"],["notif","bell","اطلاعات"],["profile","user","پروفائل"]].map(t=>t[2]?`<button data-go="${t[0]}" class="${S.scr==t[0]?"on":""}">${ic(t[1],22)}${t[2]}${t[0]=="notif"&&nu()?`<span class="bd">${nu()}</span>`:""}</button>`:`<button class="plus" data-go="write" aria-label="نئی تحریر">${ic("plus",24)}</button>`).join("");
+const sh=$("#sheet");if(S.sheet){sh.className="on";sh.innerHTML=`<div class="sb" data-close></div><div class="sh">${SH[S.sheet]()}</div>`}else{sh.className="";sh.innerHTML=""}}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1800)}
+function pickQr(k,f){if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const z=Math.min(1,520/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*z;c.height=im.height*z;c.getContext("2d").drawImage(im,0,0,c.width,c.height);S.ed[k+"q"]=c.toDataURL("image/png");go("editp",1)};im.src=r.result};r.readAsDataURL(f)}
+function pickPic(f){if(!f)return;if(!/^image\//.test(f.type)){toast("صرف تصویر منتخب کریں");return}
+const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const m=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*m);c.height=Math.round(im.height*m);c.getContext("2d").drawImage(im,0,0,c.width,c.height);CR={im:c,rot:0,z:1,x:0,y:0};S.sheet="";go("crop")};im.onerror=()=>toast("تصویر کھل نہیں سکی");im.src=r.result};r.readAsDataURL(f)}
+let CR=null;const CP=new Map();let cd0=1,cz0=1;
+function crClamp(){const r=CR.rot%2,w=r?CR.im.height:CR.im.width,h=r?CR.im.width:CR.im.height,k=600/Math.min(w,h)*CR.z,mx=(w*k-600)/2,my=(h*k-600)/2;CR.x=Math.max(-mx,Math.min(mx,CR.x));CR.y=Math.max(-my,Math.min(my,CR.y))}
+function crDraw(c,V){const g=c.getContext("2d"),r=CR.rot%2,w=r?CR.im.height:CR.im.width,h=r?CR.im.width:CR.im.height,k=V/Math.min(w,h)*CR.z,f=V/600;g.fillStyle="#000";g.fillRect(0,0,V,V);g.save();g.translate(V/2+CR.x*f,V/2+CR.y*f);g.rotate(CR.rot*Math.PI/2);g.scale(k,k);g.drawImage(CR.im,-CR.im.width/2,-CR.im.height/2);g.restore()}
+function crUp(){const c=$("#cc");if(!c||!CR)return;crClamp();crDraw(c,600);const z=$("#czm");if(z)z.value=CR.z}
+R.crop=()=>`${hd("تصویر ایڈجسٹ کریں",'<button class="pill" data-cdone>ہو گیا</button>')}
+<div class="pad" style="text-align:center"><div class="cw"><canvas id="cc" width="600" height="600" aria-label="تصویر کا پیش منظر"></canvas><div class="cmk"></div></div>
+<div class="mu" style="font-size:13px;margin-top:10px">کھینچ کر جگہ درست کریں، دو انگلیوں سے زوم کریں</div>
+<div class="crow"><button class="ic" data-crot aria-label="گھمائیں">${ic("rotate")}</button><input type="range" id="czm" min="1" max="4" step="0.01" value="1" aria-label="زوم"><button class="lnk" data-crst>ری سیٹ</button></div></div>`;
+document.addEventListener("pointerdown",e=>{if(e.target.id!="cc")return;e.target.setPointerCapture(e.pointerId);CP.set(e.pointerId,[e.clientX,e.clientY]);if(CP.size==2){const[a,b]=[...CP.values()];cd0=Math.hypot(a[0]-b[0],a[1]-b[1])||1;cz0=CR.z}});
+document.addEventListener("pointermove",e=>{const p=CP.get(e.pointerId);if(!p||!CR)return;const f=600/$("#cc").getBoundingClientRect().width;if(CP.size==1){CR.x+=(e.clientX-p[0])*f;CR.y+=(e.clientY-p[1])*f}CP.set(e.pointerId,[e.clientX,e.clientY]);if(CP.size==2){const[a,b]=[...CP.values()];CR.z=Math.max(1,Math.min(4,cz0*Math.hypot(a[0]-b[0],a[1]-b[1])/cd0))}crUp()});
+const cpe=e=>CP.delete(e.pointerId);document.addEventListener("pointerup",cpe);document.addEventListener("pointercancel",cpe);
+document.addEventListener("wheel",e=>{if(e.target.id!="cc"||!CR)return;e.preventDefault();CR.z=Math.max(1,Math.min(4,CR.z*(e.deltaY<0?1.08:.93)));crUp()},{passive:false});
+document.addEventListener("input",e=>{if(e.target.id=="czm"&&CR){CR.z=+e.target.value;crUp()}});
+function sd(){const w=S.w;if(w.eid){S.w=H0();return 0}if(!(w.t.trim()||w.b.trim()))return 0;const d={id:w.did||"d"+Date.now(),t:w.t,b:w.b,g:w.g,tp:w.tp,cov:w.cov};const i=S.dr.findIndex(x=>x.id==d.id);if(i<0)S.dr.unshift(d);else S.dr[i]=d;S.w=H0();return 1}
+function pub(){const w=S.w;if(!w.t.trim()){w.bad=1;go("write",1);toast("پہلے عنوان لکھیں");return}if(!w.b.trim()){toast("تحریر خالی ہے");return}
+if(!w.eid&&!navigator.onLine){sd();S.scr=S.H.pop()||"home";render();toast("انٹرنیٹ نہیں ہے۔ تحریر مسودے میں محفوظ کر دی گئی");return}
+if(w.eid){Object.assign(A[w.eid],{cv:w.cov,sp:w.d,t:esc(w.t),b:esc(w.b),g:w.g,tp:w.tp,x:esc(w.b.split("\n")[0].slice(0,70))+"…"});S.art=w.eid;S.w=H0();S.H.pop();S.scr="article";render();toast("تحریر اپ ڈیٹ ہو گئی");return}
+const id="n"+Date.now();A[id]={cv:w.cov,sp:w.d,t:esc(w.t),by:S.me.n,tm:"ابھی",g:w.g,tp:w.tp,l:0,k:"g1",x:esc(w.b.split("\n")[0].slice(0,70))+"…",b:esc(w.b)};
+S.home.unshift(id);S.own.unshift(id);S.w=H0();S.gen="سب";S.feed=0;go("home");toast("تحریر شائع ہو گئی")}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-go],[data-back],[data-open],[data-like],[data-save],[data-cm],[data-gen],[data-feed],[data-tab],[data-tp],[data-toast],[data-pub],[data-sw],[data-fl],[data-rc],[data-fs],[data-nk],[data-sheet],[data-close],[data-amt],[data-qr],[data-send],[data-csend],[data-th],[data-crot],[data-crst],[data-cdone],[data-del],[data-au],[data-pp],[data-pt],[data-rm],[data-ep],[data-psave],[data-dela],[data-ea],[data-dl],[data-dr],[data-ddr],[data-nt],[data-nall],[data-rpl],[data-crp],[data-cdel],[data-dback],[data-pm],[data-cpy],[data-picx],[data-qx],[data-lg],[data-ht],[data-fq],[data-hsend],[data-int],[data-ph],[data-otpv],[data-paid],[data-fm],[data-retry],[data-hsend],[data-x]");if(!t)return;const d=t.dataset;
+const GK={like:"پسند کرنے",save:"تحریر محفوظ کرنے",fl:"فالو کرنے",csend:"تبصرہ لکھنے",pub:"تحریر شائع کرنے",send:"تعاون ریکارڈ کرنے",rpl:"جواب دینے",cdel:"تبصرہ حذف کرنے",hsend:"پیغام بھیجنے"};
+if(!S.user){const k=Object.keys(GK).find(x=>x in d)||(["write","notif","profile"].includes(d.go)?"go":"")||(d.sheet=="donate"?"don":"");if(k){S.sheet="signin";S.sig=GK[k]||(k=="don"?"تعاون ریکارڈ کرنے":"یہ حصہ دیکھنے");render();return}}
+if(d.x&&X[d.x]){X[d.x](d,t);return}
+if("toast" in d)toast(d.toast);
+if("send" in d){const a=da();if(a<10||a>1000000){S.dmsg="رقم 10 سے 10,00,000 روپے کے درمیان ہونی چاہیے۔";render();return}S.dmsg="";S.dp=1;S.dm="";render();return}
+if("del" in d&&S.dc.trim().toUpperCase()!=="DELETE"){S.derr="تصدیق کے لیے DELETE لکھیں۔";render();return}
+if("close" in d||"del" in d){S.dp=0;S.dm="";S.sheet="";S.qr=0;S.dc="";S.derr="";S.dmsg="";S.rep=null;if("del" in d){S.user=0;go("splash");toast("آپ کا اکاؤنٹ ڈیلیٹ کر دیا گیا")}else render();return}
+if("go" in d)go(d.go)
+else if("back" in d){const sv=S.scr=="write"&&sd();S.scr=S.H.pop()||"home";S.sheet="";render();if(sv)toast("مسودے میں محفوظ ہو گیا")}
+else if("open" in d){S.art=d.open;S.rc=0;go("article")}
+else if("like" in d){S.lk[d.like]=!S.lk[d.like];go(S.scr,1)}
+else if("save" in d){S.sv[d.save]=!S.sv[d.save];go(S.scr,1);toast(S.sv[d.save]?"محفوظ کر لی گئی":"محفوظ سے ہٹا دی گئی")}
+else if("cm" in d){S.art=d.cm;go("comments")}
+else if("gen" in d){S.gen=d.gen;go("home",1)}else if("feed" in d){S.feed=+d.feed;go("home",1)}
+else if("tab" in d){S.tab=+d.tab;go("profile",1)}else if("tp" in d){S.tp=S.tp==d.tp?"":d.tp;go("explore",1)}
+else if("pub" in d)pub();else if("sw" in d){S.w.d=!S.w.d;go("write",1)}
+else if("fl" in d){S.fl[d.fl]=!S.fl[d.fl];go(S.scr,1)}
+else if("rc" in d){S.rc=!S.rc;go("article",1)}
+else if("fs" in d){S.fs=Math.max(0,Math.min(3,S.fs+ +d.fs));go("article",1)}else if("nk" in d){S.nk=!S.nk;go("article",1)}
+else if("pp" in d){S.pp=d.pp;S.pt=+d.pt;go("people")}else if("pt" in d){S.pt=+d.pt;go("people",1)}
+else if("au" in d){S.au=d.au;go(d.au==S.me.n?"profile":"author")}
+else if("rm" in d){S.rm[d.rm]=1;go("people",1);toast("فالوور ہٹا دیا گیا")}
+else if("ep" in d){S.ed={...S.me};go("editp")}
+else if("psave" in d){const n=esc(S.ed.n.trim());if(!n){toast("نام خالی نہیں ہو سکتا");return}const hh=(S.ed.h||"").trim().toLowerCase();if(!/^[a-z0-9_]{3,24}$/.test(hh)){toast("ہینڈل 3 سے 24 حروف کا ہو: انگریزی چھوٹے حروف، اعداد اور _");return}const bk=[S.ed.bn,S.ed.bt,S.ed.ba].map(x=>(x||"").trim());if(bk.some(Boolean)&&!bk.every(Boolean)){toast("بینک کی تینوں تفصیلات (نام، ٹائٹل، اکاؤنٹ نمبر) لکھیں");return}Object.values(A).forEach(a=>{if(a.by==S.me.n)a.by=n});S.me={n,h:hh,c:S.ed.c||"",po:S.ed.po?1:0,bio:esc(S.ed.bio.trim()),pic:S.ed.pic||"",jq:S.ed.jq||"",eq:S.ed.eq||"",bn:(S.ed.bn||"").trim(),bt:(S.ed.bt||"").trim(),ba:(S.ed.ba||"").replace(/[^A-Za-z0-9 ]/g,"").toUpperCase().trim()};S.scr=S.H.pop()||"profile";render();toast("پروفائل محفوظ ہو گیا")}
+else if("nt" in d){const n=S.nt[+d.nt];n.r=1;const M={art:()=>{S.art=n.id;go("article")},cm:()=>{S.art=n.id;go("comments")},au:()=>{S.au=n.id;go("author")},tk:()=>{S.tkid=n.id;go("ticket")},tm:()=>go("team"),bg:()=>go("badges"),pf:()=>go("platform"),rm:()=>{S.sheet="removed";render()}};(M[n.ty]||M.au)()}
+else if("nall" in d){S.nt.forEach(n=>n.r=1);go("notif",1)}
+else if("rpl" in d){S.rp=d.rpl;go("comments",1);const c=$("#cin");if(c)c.focus()}
+else if("crp" in d){toast("تبصرہ رپورٹ ہو گیا")}
+else if("cdel" in d){CM[S.art].splice(+d.cdel,1);go("comments",1);toast("تبصرہ حذف ہو گیا")}
+else if("dback" in d){S.dp=0;S.dm="";render()}
+else if("pm" in d){S.dm=S.dm==d.pm?"":d.pm;render()}
+else if("cpy" in d){try{navigator.clipboard.writeText(d.cpy).catch(()=>{})}catch(_){}toast("کاپی ہو گیا")}
+else if("picx" in d){S.ed.pic="";S.sheet="";go("editp",1);toast("تصویر ہٹا دی گئی")}
+else if("qx" in d){S.ed[d.qx+"q"]="";go("editp",1)}
+else if("lg" in d){S.lg=d.lg;go("legal")}
+else if("ht" in d){S.ht=+d.ht;go("history",1)}
+else if("fq" in d){const m=$("#hm");if(m)S.hm=m.value;S.fq=S.fq==+d.fq?-1:+d.fq;go("help",1)}
+else if("hsend" in d){const m=$("#hm"),v=m?m.value.trim():"";if(v.length<5){toast("پہلے پیغام لکھیں (کم از کم 5 حروف)");return}const n="HL-"+String(S.tk.length+1).padStart(4,"0");S.tk.unshift({id:"t"+Date.now(),n,type:fxv("help.type","question"),msg:v,st:"received",tm:"ابھی",th:[]});S.hm="";S.hf="";go("help",1);toast("آپ کا پیغام بھیج دیا گیا، نمبر #"+n)}
+else if("int" in d){S.int[d.int]=!S.int[d.int];go("interests",1)}
+else if("ph" in d){if(S.ob.ph.replace(/\D/g,"").length<10){toast("درست موبائل نمبر درج کریں");return}otpStart();go("otp")}
+else if("otpv" in d){if(!/^\d{6}$/.test(S.ob.otp)){toast("6 ہندسوں کا کوڈ درج کریں");return}S.ob.otp="";S.user=1;go("interests")}
+else if("paid" in d){const to=S.scr=="author"?S.au:A[S.art].by;S.dh.unshift({to,amt:da(),tm:"ابھی",st:"s",note:S.dn.trim()});S.sheet="";S.dp=0;S.dm="";S.cust="";S.dn="";render();toast("شکریہ! تعاون درج ہو گیا")}
+else if("fm" in d){const x=$("[data-w=b]"),a=x.selectionStart,z=x.selectionEnd,s=x.value,k=d.fm=="b"?"**":d.fm=="i"?"*":"",q=s.slice(a,z)||"متن";S.w.b=d.fm=="q"?s.slice(0,a)+"> "+q+s.slice(z):s.slice(0,a)+k+q+k+s.slice(z);go("write",1)}
+else if("retry" in d){bn();toast(navigator.onLine?"انٹرنیٹ بحال ہے":"ابھی بھی انٹرنیٹ نہیں ہے")}
+else if("dl" in d){sd();go("drafts")}
+else if("dr" in d){sd();const x=S.dr.find(y=>y.id==d.dr);S.dr=S.dr.filter(y=>y.id!=d.dr);S.w={...H0(),t:x.t,b:x.b,g:x.g,tp:x.tp,cov:x.cov||"",did:x.id};S.H.pop();S.scr="write";render()}
+else if("ddr" in d){S.dr=S.dr.filter(y=>y.id!=d.ddr);go("drafts",1);toast("مسودہ ڈیلیٹ ہو گیا")}
+else if("ea" in d){const a=A[S.art];S.sheet="";S.w={t:un(a.t),b:un(a.b),g:a.g,tp:a.tp,d:a.sp!==false,cov:a.cv||"",bad:0,eid:S.art};go("write")}
+else if("dela" in d){const i=S.art;delete A[i];S.home=S.home.filter(x=>x!=i);S.own=S.own.filter(x=>x!=i);delete S.sv[i];delete S.lk[i];S.sheet="";S.scr=S.H.pop()||"home";render();toast("تحریر ڈیلیٹ ہو گئی")}
+else if("sheet" in d){if(d.sid)S.art=d.sid;S.sheet=d.sheet;S.dp=0;S.dm="";render()}else if("amt" in d){S.amt=+d.amt;S.cust="";S.dmsg="";render()}else if("qr" in d){S.qr=!S.qr;render()}
+else if("crot" in d){CR.rot=(CR.rot+1)%4;CR.x=CR.y=0;crUp()}else if("crst" in d){CR.z=1;CR.x=CR.y=0;CR.rot=0;crUp()}else if("cdone" in d){const c=document.createElement("canvas");c.width=c.height=480;crDraw(c,480);S.ed.pic=c.toDataURL("image/jpeg",.88);S.scr=S.H.pop()||"editp";render();toast("تصویر لگ گئی")}
+else if("th" in d){S.th=d.th;if(d.th=="auto")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=d.th;go("settings",1)}
+else if("csend" in d){const i=$("#cin"),v=i.value.trim();if(!v){toast("پہلے تبصرہ لکھیں");return}(CM[S.art]=CM[S.art]||[]).push([S.me.n,esc(v),S.rp?1:0]);S.rp="";go("comments",1)}});
+document.addEventListener("input",e=>{const k=e.target.dataset.w;if(k){S.w[k]=e.target.value;if(k=="t"&&S.w.bad){S.w.bad=0;e.target.classList.remove("bad")}}
+if("q" in e.target.dataset){S.q=e.target.value;$("#res").innerHTML=exRes()}
+const ek=e.target.dataset.e;if(ek)S.ed[ek]=e.target.value;const ok=e.target.dataset.o;if(ok){e.target.value=e.target.value.replace(ok=="ph"?/[^\d+ ]/g:/\D/g,"");S.ob[ok]=e.target.value}
+const t2=e.target,ds=t2.dataset;if(ds.fx)S.fx[ds.fx]=t2.value;if("rd" in ds&&S.rep)S.rep.d=t2.value;if("dn" in ds)S.dn=t2.value;if("dc" in ds)S.dc=t2.value;
+if("cust" in ds){t2.value=t2.value.replace(/\D/g,"");S.cust=t2.value;S.dmsg="";const b=$("#dnb");if(b)b.textContent=donLbl()}});
+document.addEventListener("change",e=>{const k=e.target.dataset.w;if(k){S.w[k]=e.target.value;go("write",1)}if("pic" in e.target.dataset)pickPic(e.target.files[0]);for(const k of ["jc","ep"])if("qr"+k in e.target.dataset)pickQr(k,e.target.files[0]);
+if("cov" in e.target.dataset)pickCov(e.target.files[0]);
+if("hf" in e.target.dataset){const f=e.target.files[0];if(f){if(f.size>5*1024*1024){toast("فائل 5 MB سے بڑی ہے")}else{const m=$("#hm");if(m)S.hm=m.value;S.hf=f.name;go("help",1)}}}});
+addEventListener("offline",()=>{bn();toast("انٹرنیٹ نہیں ہے")});addEventListener("online",()=>{bn();toast("انٹرنیٹ بحال ہو گیا")});
+render();
+</script>
+</body>
+</html>

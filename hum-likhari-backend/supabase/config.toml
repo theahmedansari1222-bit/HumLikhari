@@ -1,0 +1,47 @@
+project_id = "hum-likhari"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+major_version = 17
+
+[studio]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "http://localhost:8080"
+additional_redirect_urls = ["http://127.0.0.1:8080"]
+jwt_expiry = 3600
+
+[auth.email]
+enable_signup = true
+
+[auth.sms]
+enable_signup = true
+# Phone sign-in needs an SMS provider. Fill ONE provider and keep its secret in the environment, never in this file:
+# [auth.sms.twilio]
+# enabled = true
+# account_sid = "env(TWILIO_ACCOUNT_SID)"
+# message_service_sid = "env(TWILIO_MESSAGE_SERVICE_SID)"
+# auth_token = "env(TWILIO_AUTH_TOKEN)"
+
+# Google sign-in (client id/secret come from Google Cloud console; add the callback URL shown by Supabase).
+# [auth.external.google]
+# enabled = true
+# client_id = "env(GOOGLE_CLIENT_ID)"
+# secret = "env(GOOGLE_CLIENT_SECRET)"
+
+[functions.delete-account]
+verify_jwt = true
+
+# Authorised in code (admin session OR x-dispatch-secret) so a scheduler without a user JWT can call it.
+[functions.push-dispatch]
+verify_jwt = false
+
+[functions.manage-user-role]
+verify_jwt = true

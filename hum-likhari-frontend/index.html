@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#ffffff">
+<title>ہم لکھاری</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@500&display=swap">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="stage">
+  <div class="phone" id="phone">
+    <main class="screen" id="screen" aria-live="polite"></main>
+    <nav class="tabbar" id="tabbar" aria-label="مرکزی مینو"></nav>
+    <div id="off" role="alert"><span>انٹرنیٹ نہیں ہے</span></div>
+    <div id="sheet"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<noscript><p style="padding:24px;text-align:center">یہ ایپ چلانے کے لیے جاوا اسکرپٹ ضروری ہے۔</p></noscript>
+<script src="config.js"></script>
+<!-- Pin a version you have tested, or self-host this file (see docs/DEPLOYMENT.md). -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="js/vendor/supabase-adapter.js"></script>
+<script src="js/core/utils.js"></script>
+<script src="js/core/icons.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/router.js"></script>
+<script src="js/core/store.js"></script>
+<script src="js/content/static.js"></script>
+<script src="js/ui/components.js"></script>
+<script src="js/ui/payments.js"></script>
+<script src="js/ui/sheets.js"></script>
+<script src="js/screens/auth.js"></script>
+<script src="js/screens/feed.js"></script>
+<script src="js/screens/write.js"></script>
+<script src="js/screens/social.js"></script>
+<script src="js/screens/profile.js"></script>
+<script src="js/screens/settings.js"></script>
+<script src="js/screens/programs.js"></script>
+<script src="js/core/events.js"></script>
+<script src="js/core/boot.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Local Supabase state and secrets
+.supabase/
+supabase/.temp/
+supabase/.branches/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
